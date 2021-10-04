@@ -26,8 +26,6 @@ for file in glob(os.path.join(sys.argv[1], "*")):
         dir_name = os.path.join(sys.argv[1], str(i).rjust(2, "0"))
         os.mkdir(dir_name)
 
-        print(current_dirs)
-
         # move the collected files
         for f in current_dirs:
             shutil.move(f, os.path.join(dir_name, os.path.basename(f)))

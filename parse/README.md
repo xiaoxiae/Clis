@@ -10,5 +10,5 @@ Moves the photos from the specified folder to the output folder.
 ## `split.py <input folder>`
 Splits the hold photos into separate folders. The splits are performed automatically when a dark photo is spotted, which is then used as a mask for that directory (and named as such).
 
-## `clean.py <input file> <mask file> <output file>`
+## `clean.py <input file> <mask file>`
 Cleans hot pixels from a photo using a mask (a black photo containing only the hot pixels, taken by covering the lens).
