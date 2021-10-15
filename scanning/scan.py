@@ -32,40 +32,40 @@ while True:
 print("Camera: Connected!")
 
 
-photos = []
-
 def take_photo():
-    """Take a photo on the camera, storing its name."""
+    """Take a photo on the camera, returning its object."""
+    print(f"Camera: taking photo...", end="", flush=True)
     file_path = camera.capture(gp.GP_CAPTURE_IMAGE)
+    print(f" '{file_path.name}' taken.", flush=True)
 
-    print(f"Camera: taken photo '{file_path.name}'")
-    photos.append(file_path)
+    return file_path
 
 def turn_by(angle: int):
     """Turn the turntable by an angle."""
     pass # TODO: communicate with Arduino
 
 
+# rotate and save the pictures at the same time
+directory = datetime.now().strftime('%s')
+os.mkdir(directory)
+
 angle = int(360 / arguments.count)
 
 for i in range(arguments.count):
-    take_photo()
+    photo = take_photo()
+    target = os.path.join(directory, photo.name)
+
+    camera_file = camera.file_get(photo.folder, photo.name, gp.GP_FILE_TYPE_NORMAL)
+    camera_file.save(target)
 
     if i != arguments.count - 1:
         turn_by(angle)
 
 
-directory = datetime.now().strftime('%s')
-os.mkdir(directory)
-
-# copy files over
-for photo in photos:
-    target = os.path.join(directory, photo.name)
-    camera_file = camera.file_get(photo.folder, photo.name, gp.GP_FILE_TYPE_NORMAL)
-    camera_file.save(target)
-
 for file in glob(os.path.join(directory, "*")):
+    print(f"Darktable: converting photo {os.path.basename(file)}...", end="", flush=True)
     Popen(["darktable-cli", file, os.path.join(os.path.dirname(file), ".")], stdin=DEVNULL, stdout=DEVNULL, stderr=DEVNULL).communicate()
+    print(f" done.", flush=True)
 
 camera.exit()
 
