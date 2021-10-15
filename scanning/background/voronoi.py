@@ -1,3 +1,4 @@
+# NOTE: this uses https://github.com/xiaoxiae/Voronoi
 from Voronoi.voronoi import *
 
 generate(
