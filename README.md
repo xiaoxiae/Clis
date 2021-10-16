@@ -1,13 +1,11 @@
 # Clis – the climber's scanner
 A project for efficient 3D scanning of climbing holds and climbing gym interiors.
 
-## Directories
-
-### `data`
+## `data/`
 Contains the data format specification.
 
-### `processing`
+## `processing/`
 Contains tools for processing the images into 3D models.
 
-### `scanning`
+## `scanning/`
 Contains tools for scanning the holds.

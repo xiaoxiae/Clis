@@ -9,4 +9,4 @@ It requires:
 - [Darktable](https://www.darktable.org/) for converting the RAW images into usable JPEGs.
 
 ## `turntable/`
-A folder containing the documentation for the custom turntable used for turning the holds.
+A folder containing the source code/documentation for the custom turntable used for turning the holds.

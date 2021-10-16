@@ -14,7 +14,11 @@ os.chdir(os.path.dirname(os.path.abspath(__file__)))
 
 
 parser = argparse.ArgumentParser(description=d)
+
 parser.add_argument("count", type=int, help="How many images to take.")
+
+parser.add_argument("--arduino-device", metavar="PATH", help="The Arduino device path (defaults to /dev/ttyACM0).", default='/dev/ttyACM0')
+
 arguments = parser.parse_args()
 
 camera = gp.Camera()
@@ -34,7 +38,7 @@ print(" connected.", flush=True)
 
 try:
     print('Arduino: \testablishing serial connection...', end="", flush=True)
-    ser = serial.Serial('/dev/ttyACM0',
+    ser = serial.Serial(arguments.arduino_device,
         baudrate=9600,
         parity=serial.PARITY_NONE,
         stopbits=serial.STOPBITS_ONE
