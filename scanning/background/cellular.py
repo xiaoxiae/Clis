@@ -1,7 +1,7 @@
 from PIL import Image
 from random import random
 
-image = Image.new("RGB", (1920, 1080))  # with default black color
+image = Image.new("RGB", (1754, 1240))  # with default black color
 
 pixels = image.load()
 
