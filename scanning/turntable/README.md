@@ -10,8 +10,9 @@ A custom turntable powered by Arduino Uno.
 - 6x 608 bearings
 
 ## Construction
-1. print the parts of the printer
+1. print the parts of the printer (found in the `parts/` folder)
 2. add bearings and the motor
-3. wire everything properly
-4. ?
-5. profit
+3. wire and power everything properly
+4. load code to the Arduino (found in the `code/` folder)
+
+After this, the Arduino can be controlled as seen in the the `code/code.ino` script.
