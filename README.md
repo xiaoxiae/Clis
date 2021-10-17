@@ -1,5 +1,11 @@
-# Clis – the climber's scanner
-A project for efficient 3D scanning of climbing holds and climbing gym interiors.
+<p align="center" width="100%">
+<img width="50%" src="https://raw.githubusercontent.com/Climber-Apps/Clis/master/logo.svg">
+</p>
+
+<p align="center" width="100%">
+The <strong>cli</strong>mber's <strong>s</strong>canner – efficient 3D scanning of climbing holds and climbing gym interiors.
+</p>
+
 
 ## `data/`
 Contains the data format specification.
