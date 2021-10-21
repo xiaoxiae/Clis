@@ -7,4 +7,5 @@ It requires [MeshroomCL](https://github.com/openphotogrammetry/meshroomcl). _Reg
 
 Note that:
 - **it takes a LONG time* for each of the holds to be modeled (like an hour or three).
-- MeshroomCL currently only works under Windows, so you'll need to install it there, add `meshroom_batch` to the path and install Python 3 to run the script
+- MeshroomCL currently only works under Windows, so you'll need to install it there
+	- don't forget to add `meshroom_batch` to the path and install Python 3 to run the script
