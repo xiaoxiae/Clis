@@ -1,12 +1,20 @@
-#include <Stepper.h>
-
-// TODO: the correct number
-const int stepsPerRevolution = 200;
-
-// TODO: correct pins
-Stepper motor(stepsPerRevolution, 2, 3, 4, 5);
-
-
+#include <AccelStepper.h>
+#define dirPin 2
+#define stepPin 3
+#define motorInterfaceType 1
+// Create a new instance of the AccelStepper class:
+AccelStepper stepper = AccelStepper(motorInterfaceType, stepPin, dirPin);
+void setup() {
+  // Set the maximum speed in steps per second:
+  stepper.setMaxSpeed(1000);
+}
+void loop() {
+  // Set the speed in steps per second:
+  stepper.setSpeed(400);
+  // Step the motor with a constant speed as set by setSpeed():
+  stepper.runSpeed();
+}
+/*
 int angleToRevolutions(int angle) {
   return (int)((angle / 360.0) * stepsPerRevolution);
 }
@@ -26,3 +34,4 @@ void loop() {
     Serial.println(angle, DEC);
   }
 }
+*/

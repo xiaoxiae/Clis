@@ -1,4 +1,4 @@
-d = """A script for controlling the automatic camera + Arduino setup."""
+d = """A script for creating photos using the automatic camera + Arduino setup."""
 
 import serial
 import argparse
@@ -9,6 +9,8 @@ from subprocess import Popen, DEVNULL
 from glob import glob
 from time import sleep
 from datetime import datetime
+
+OUTPUT_DIRECTORY = "scans"
 
 os.chdir(os.path.dirname(os.path.abspath(__file__)))
 
@@ -48,6 +50,7 @@ try:
         ser.open()
 
     # give Arduino some time
+    # important, *don't change this*
     sleep(2)
 
     print(" established.")
@@ -90,7 +93,7 @@ def turn_by(angle: int):
 
 
 # rotate and save the pictures at the same time
-directory = datetime.now().strftime('%s')
+directory = os.path.join(OUTPUT_DIRECTORY, f"{datetime.now().strftime('%s')}-{arguments.count}")
 os.mkdir(directory)
 
 angle = int(360 / arguments.count)

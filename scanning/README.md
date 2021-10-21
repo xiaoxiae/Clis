@@ -19,3 +19,6 @@ To scale the appropriate file for printing, `pdfjam` can be used:
 ```
 pdfjam --no-tidy --paper a4 -- <file_name>
 ```
+
+## `TUTORIAL.md`
+Contais my notes about the setup that I used for scanning (lighting, background, number of photos, camera, etc.).
