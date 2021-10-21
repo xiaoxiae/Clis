@@ -1,4 +1,4 @@
-# Specification
+# Data
 The specification of the data format used for the climbing holds and the climbing wall.
 
 ## `holds.yaml`
