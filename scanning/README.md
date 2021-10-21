@@ -12,7 +12,7 @@ It requires:
 A folder containing the source code/documentation for the custom turntable used for turning the holds.
 
 ## `background/`
-A folder containing scripts for generating hold backgrounds (the surface the holds are place on). The `voronoi.py` background is the one currently used, since it seems to work the best.
+A folder containing scripts for generating hold backgrounds (the surface the holds are place on).
 
 To scale the appropriate file for printing, `pdfjam` can be used:
 
