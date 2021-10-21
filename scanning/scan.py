@@ -30,10 +30,15 @@ while True:
     try:
         camera.init()
     except gp.GPhoto2Error as ex:
-        if ex.code == gp.GP_ERROR_MODEL_NOT_FOUND:
-            sleep(2)
-            continue
-        raise
+        # this is not too pretty, but works...
+        try:
+            if ex.code == gp.GP_ERROR_MODEL_NOT_FOUND:
+                sleep(2)
+                continue
+            raise
+        except KeyboardInterrupt:
+            print(" interrupted by the user, quitting.", flush=True)
+            quit()
     break
 print(" connected.", flush=True)
 
