@@ -10,8 +10,6 @@ from glob import glob
 from time import sleep
 from datetime import datetime
 
-OUTPUT_DIRECTORY = "scans"
-
 os.chdir(os.path.dirname(os.path.abspath(__file__)))
 
 
@@ -20,6 +18,8 @@ parser = argparse.ArgumentParser(description=d)
 parser.add_argument("count", type=int, help="How many images to take.")
 
 parser.add_argument("--arduino-device", metavar="PATH", help="The Arduino device path (defaults to /dev/ttyACM0).", default='/dev/ttyACM0')
+
+parser.add_argument("-o", "--output", help="The output directory. Defaults to 'scans/'.", default='scans')
 
 arguments = parser.parse_args()
 
@@ -93,7 +93,7 @@ def turn_by(angle: int):
 
 
 # rotate and save the pictures at the same time
-directory = os.path.join(OUTPUT_DIRECTORY, f"{datetime.now().strftime('%s')}-{arguments.count}")
+directory = os.path.join(arguments.output, f"{datetime.now().strftime('%s')}-{arguments.count}")
 os.mkdir(directory)
 
 angle = int(360 / arguments.count)
