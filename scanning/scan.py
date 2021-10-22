@@ -81,10 +81,7 @@ def turn_by(angle: int):
     ser.flushInput()
     ser.flushOutput()
 
-    # NOTE: this will never be more than 255, since we're dividing 360 by
-    # the number of photos and the last turn is not made, so if there is
-    # only 1 photo, no turning will be done
-    ser.write((angle).to_bytes(1, byteorder='big'))
+    ser.write(str(angle))
 
     while True:
         data = ser.readline().decode().strip()
