@@ -20,8 +20,8 @@ void disable_motor() {
 
 
 void setup() {
-  stepper.setMaxSpeed(200.0);
-  stepper.setAcceleration(100.0);
+  stepper.setMaxSpeed(150.0);
+  stepper.setAcceleration(120.0);
 
   pinMode(enablePin, OUTPUT);
   disable_motor();

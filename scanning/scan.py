@@ -81,7 +81,7 @@ def turn_by(angle: int):
     ser.flushInput()
     ser.flushOutput()
 
-    ser.write(str(angle))
+    ser.write(str(angle).encode())
 
     while True:
         data = ser.readline().decode().strip()
