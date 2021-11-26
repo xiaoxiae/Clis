@@ -3,10 +3,10 @@ from Voronoi.voronoi import *
 
 generate(
     path = "voronoi.pdf",
-    width = 1754,
-    height = 1240,
+    width = 4960,
+    height = 3508,
     regions = 80,
     colors = ["#000000"],
-    border_size = 35,
+    border_size = 80,
     border_color = "#ffffff",
 )
