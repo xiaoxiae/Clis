@@ -8,10 +8,10 @@ The <strong>cli</strong>mber's <strong>s</strong>canner – efficient 3D scannin
 
 
 ## `data/`
-Contains the data format specification.
+Contains the hold data format specification.
 
 ## `processing/`
-Contains tools for processing the images into 3D models.
+Contains tools for processing the images into 3D models of holds.
 
 ## `scanning/`
 Contains tools for scanning the holds.
