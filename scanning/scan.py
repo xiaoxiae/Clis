@@ -1,21 +1,22 @@
-d = """A script for creating photos automatically using a camera and optionally a turntable."""
-
-import serial
-import argparse
-import gphoto2 as gp
-import os
-
-from subprocess import Popen, DEVNULL
-from glob import glob
-from time import sleep
+"""A script for creating photos automatically using a camera and optionally a turntable."""
 from datetime import datetime
+from time import sleep
+from glob import glob
+from subprocess import Popen, DEVNULL
+import os
+import gphoto2 as gp
+import argparse
+import serial
+
 
 os.chdir(os.path.dirname(os.path.abspath(__file__)))
 
 
-parser = argparse.ArgumentParser(description=d)
+parser = argparse.ArgumentParser(
+    description="A script for creating photos automatically using a camera and optionally a turntable.")
 
-subparsers = parser.add_subparsers(help='modes', dest='mode', required=True)
+subparsers = parser.add_subparsers(
+    help='scanning mode', dest='mode', required=True)
 
 auto_parser = subparsers.add_parser('automatic', help='automatic mode')
 
@@ -132,7 +133,8 @@ for i in range(arguments.count):
     photo = take_photo()
     target = os.path.join(directory, photo.name)
 
-    camera_file = camera.file_get(photo.folder, photo.name, gp.GP_FILE_TYPE_NORMAL)
+    camera_file = camera.file_get(
+        photo.folder, photo.name, gp.GP_FILE_TYPE_NORMAL)
     camera_file.save(target)
 
     if i != arguments.count - 1 and arguments.mode == "automatic":
