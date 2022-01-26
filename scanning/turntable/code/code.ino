@@ -11,9 +11,13 @@
 #define enablePin3 10
 
 #define motorInterfaceType 1
-#define stepsPerRevolution (int)(200 * 1.02)
 
-#define max_speed 150.0
+#define stepsPerRevolution 200
+#define gearRatio 90.0f / 12.0f
+#define angleCoefficient (int)(stepsPerRevolution * gearRatio)
+
+
+#define max_speed 200.0
 #define max_acceleration 80.0
 #define speed_coefficient 0.8
 
@@ -58,7 +62,7 @@ void setup() {
 }
 
 int angleToRevolutions(int angle) {
-  return (int)((angle / 360.0) * stepsPerRevolution);
+  return (int)((angle / 360.0) * angleCoefficient);
 }
 
 void loop() {
