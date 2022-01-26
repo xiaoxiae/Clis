@@ -15,3 +15,6 @@ Contains tools for processing the images into 3D models of holds.
 
 ## `scanning/`
 Contains tools for scanning the holds.
+
+## `wall/`
+Contains tools and documentation for creating model of the wall itself.
