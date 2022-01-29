@@ -13,12 +13,12 @@ os.chdir(os.path.dirname(os.path.abspath(__file__)))
 
 
 parser = argparse.ArgumentParser(
-    description="A script for creating photos automatically using a camera and optionally a turntable.")
+    description="A script for creating photos automatically using a camera and optionally a turntable."
+)
 
-subparsers = parser.add_subparsers(
-    help='scanning mode', dest='mode', required=True)
+subparsers = parser.add_subparsers(help="scanning mode", dest="mode", required=True)
 
-auto_parser = subparsers.add_parser('automatic', help='automatic mode')
+auto_parser = subparsers.add_parser("automatic", help="automatic mode")
 
 auto_parser.add_argument(
     "count",
@@ -33,7 +33,7 @@ auto_parser.add_argument(
     default="/dev/ttyACM0",
 )
 
-manual_parser = subparsers.add_parser('manual', help='manual mode')
+manual_parser = subparsers.add_parser("manual", help="manual mode")
 
 parser.add_argument(
     "-o",
@@ -47,23 +47,29 @@ arguments = parser.parse_args()
 
 camera = gp.Camera()
 
-print("Camera: \tconnecting to the camera...", end="", flush=True)
-while True:
-    try:
-        camera.init()
-    except gp.GPhoto2Error as ex:
-        # this is not too pretty, but works...
-        try:
-            if ex.code == gp.GP_ERROR_MODEL_NOT_FOUND:
-                sleep(2)
-                continue
-            raise
-        except KeyboardInterrupt:
-            print(" interrupted by the user, quitting.", flush=True)
-            quit()
-    break
-print(" connected.", flush=True)
 
+def connect_to_camera():
+    global camera
+
+    print("Camera: \tconnecting to the camera...", end="", flush=True)
+    while True:
+        try:
+            camera.init()
+        except gp.GPhoto2Error as ex:
+            # this is not too pretty, but works...
+            try:
+                if ex.code == gp.GP_ERROR_MODEL_NOT_FOUND:
+                    sleep(2)
+                    continue
+                raise
+            except KeyboardInterrupt:
+                print(" interrupted by the user, quitting.", flush=True)
+                quit()
+        break
+    print(" connected.", flush=True)
+
+
+connect_to_camera()
 
 if arguments.mode == "automatic":
     try:
@@ -87,7 +93,7 @@ if arguments.mode == "automatic":
         # TODO: this is probably not a good way
         if "Errno 13" in str(e):
             print(
-                " failed with exit code 13, make sure the device is readable and writable."
+                " failed with exit code 13, make sure the device (likely /dev/ttyACM0) is readable and writable."
             )
             quit()
 
@@ -130,27 +136,40 @@ os.mkdir(directory)
 angle = int(360 / arguments.count)
 
 for i in range(arguments.count):
-    photo = take_photo()
-    target = os.path.join(directory, photo.name)
+    try:
+        photo = take_photo()
 
-    camera_file = camera.file_get(
-        photo.folder, photo.name, gp.GP_FILE_TYPE_NORMAL)
-    camera_file.save(target)
+        target = os.path.join(directory, photo.name)
 
-    if i != arguments.count - 1 and arguments.mode == "automatic":
-        turn_by(angle)
+        camera_file = camera.file_get(photo.folder, photo.name, gp.GP_FILE_TYPE_NORMAL)
+        camera_file.save(target)
+
+        if i != arguments.count - 1 and arguments.mode == "automatic":
+            turn_by(angle)
+    except gp.GPhoto2Error:
+        print(f" failed! Retry? (y/n): ", flush=True, end="")
+
+        answer = input().strip().lower()
+
+        if answer == "y":
+            connect_to_camera()
+        else:
+            quit()
+    except KeyboardInterrupt:
+        print("interrupted by the user, quitting.", flush=True)
+        quit()
 
 
-for file in glob(os.path.join(directory, "*")):
-    print(
-        f"Darktable: \tconverting photo {os.path.basename(file)}...", end="", flush=True
-    )
-    Popen(
-        ["darktable-cli", file, os.path.join(os.path.dirname(file), ".")],
-        stdin=DEVNULL,
-        stdout=DEVNULL,
-        stderr=DEVNULL,
-    ).communicate()
-    print(f" done.", flush=True)
+# for file in glob(os.path.join(directory, "*")):
+#    print(
+#        f"Darktable: \tconverting photo {os.path.basename(file)}...", end="", flush=True
+#    )
+#    Popen(
+#        ["darktable-cli", file, os.path.join(os.path.dirname(file), ".")],
+#        stdin=DEVNULL,
+#        stdout=DEVNULL,
+#        stderr=DEVNULL,
+#    ).communicate()
+#    print(f" done.", flush=True)
 
 camera.exit()
