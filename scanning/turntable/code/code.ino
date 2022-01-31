@@ -17,8 +17,8 @@
 #define angleCoefficient (int)(stepsPerRevolution * gearRatio)
 
 
-#define max_speed 200.0
-#define max_acceleration 80.0
+#define max_speed 300.0
+#define max_acceleration 400.0
 #define speed_coefficient 0.8
 
 AccelStepper stepper1 = AccelStepper(motorInterfaceType, stepPin1, dirPin1);
