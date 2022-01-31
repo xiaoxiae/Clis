@@ -49,8 +49,7 @@ camera = gp.Camera()
 
 
 def connect_to_camera():
-    global camera
-
+    """Connect to the camera."""
     print("Camera: \tconnecting to the camera...", end="", flush=True)
     while True:
         try:
@@ -67,6 +66,14 @@ def connect_to_camera():
                 quit()
         break
     print(" connected.", flush=True)
+
+def focus():
+    """Focus the camera."""
+    # thanks https://www.cmcguinness.com/2015/11/using-python-and-gphoto2-to-control-the-focus-of-a-canon-t3i-eos-600d/
+    config = camera.get_config()
+    focus = config.get_child_by_name('autofocusdrive')
+    focus.set_value(1)
+    camera.set_config(config)
 
 
 connect_to_camera()
@@ -100,7 +107,9 @@ if arguments.mode == "automatic":
 
 def take_photo():
     """Take a photo on the camera, returning its object."""
-    print(f"Camera: \ttaking photo...", end="", flush=True)
+    print(f"Camera: \tfocusing...", end="", flush=True)
+    focus()
+    print(f" taking photo...", end="", flush=True)
     file_path = camera.capture(gp.GP_CAPTURE_IMAGE)
     print(f" '{file_path.name}' taken.", flush=True)
 
