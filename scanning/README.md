@@ -1,22 +1,25 @@
 # Scanning
 
-## `scan.py`
-A script that takes the specified number of photos of the given hold. It expect to be connected to the turntable's Arduino (as described in the `turntable` directory), and a camera that is supported by [gphoto2](http://gphoto.org/) (see [supported cameras](http://gphoto.org/proj/libgphoto2/support.php)).
+## Scripts for scanning
 
-It requires:
-- Python package `gphoto2` for camera control and
-- Python package `pyserial` for turntable control.
+### `config.py`
+A configuration file for the scanning scripts.
 
-## `scan-manual.py`
-Same as `scan.py`, but doesn't expect an argument, nor an Arduino turntable. The photos are manually taken when enter is pressed and stopped when interrupted by the user.
+### (1) `scan.py`
+Scans the hold either automatically using the turntable (in which case it expects to be connected to it), or manually. It should also be connected to a camera that is supported by [gphoto2](http://gphoto.org/) (see [supported cameras](http://gphoto.org/proj/libgphoto2/support.php)).
 
-## `convert.py`
-Converts the RAW hold photos to JPEGs. Uses [Darktable](https://www.darktable.org/) to do so.
+### (2) `copy.py`
+Copies over the images from the SD card of the camera. Expects the SD card from the camera to be connected to `/dev/sdX` (see `config.py` for the appropriate `X`).
 
-## `turntable/`
+### (3) `convert.py`
+Recursively converts the RAW hold photos to JPEGs. Uses [Darktable](https://www.darktable.org/) to do so.
+
+## Turntable build
+
+### `turntable/`
 A folder containing the source code/documentation for the custom turntable used for turning the holds.
 
-## `background/`
+### `background/`
 A folder containing scripts for generating hold backgrounds (the surface the holds are place on).
 
 To scale the appropriate file for printing, `pdfjam` can be used:

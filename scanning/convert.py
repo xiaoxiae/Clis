@@ -1,4 +1,4 @@
-d = """A script for converting photos from RAW to JPGs using darktable."""
+d = """A script for recursively converting all photos from RAW to JPGs in a given folder using darktable."""
 
 import argparse
 import os
@@ -6,13 +6,15 @@ import os
 from subprocess import Popen, DEVNULL
 from glob import glob
 
+from config import *
+
 os.chdir(os.path.dirname(os.path.abspath(__file__)))
 
 
 parser = argparse.ArgumentParser(description=d)
 
-parser.add_argument("-i", "--input", help="The input directory. Defaults to 'scans/'.", default='scans')
-parser.add_argument("-f", "--format", help="The RAW format. Defaults to 'nef'.", default='nef')
+parser.add_argument("-i", "--input", help=f"The input folder. Defaults to '{SCAN_PATH}'.", default=SCAN_PATH)
+parser.add_argument("-f", "--format", help=f"The image format. Defaults to '{IMAGE_EXTENSION}'.", default=IMAGE_EXTENSION)
 
 arguments = parser.parse_args()
 

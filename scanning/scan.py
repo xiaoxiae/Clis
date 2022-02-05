@@ -1,12 +1,12 @@
 """A script for creating photos automatically using a camera and optionally a turntable."""
 from datetime import datetime
 from time import sleep
-from glob import glob
-from subprocess import Popen, DEVNULL
 import os
 import gphoto2 as gp
 import argparse
 import serial
+
+from config import *
 
 
 os.chdir(os.path.dirname(os.path.abspath(__file__)))
@@ -14,6 +14,15 @@ os.chdir(os.path.dirname(os.path.abspath(__file__)))
 
 parser = argparse.ArgumentParser(
     description="A script for creating photos automatically using a camera and optionally a turntable."
+)
+
+save_path = os.path.join(CAMERA_SAVE_PATH, IMAGE_SAVE_PATH.lstrip("/"))
+
+parser.add_argument(
+    "--image-save-path",
+    metavar="PATH",
+    help=f"Where to save the images on the camera (defaults to {save_path}).",
+    default=save_path,
 )
 
 subparsers = parser.add_subparsers(help="scanning mode", dest="mode", required=True)
@@ -29,9 +38,10 @@ auto_parser.add_argument(
 auto_parser.add_argument(
     "--arduino-device",
     metavar="PATH",
-    help="The Arduino device path (defaults to /dev/ttyACM0).",
-    default="/dev/ttyACM0",
+    help=f"The Arduino device path (defaults to {ARDUINO_PATH}).",
+    default=ARDUINO_PATH,
 )
+
 
 manual_parser = subparsers.add_parser("manual", help="manual mode")
 
@@ -67,18 +77,34 @@ def connect_to_camera():
         break
     print(" connected.", flush=True)
 
+def set_camera_config(key, value):
+    config = camera.get_config()
+    focus = config.get_child_by_name(key)
+    focus.set_value(value)
+    camera.set_config(config)
+
 def focus():
     """Focus the camera."""
     # thanks https://www.cmcguinness.com/2015/11/using-python-and-gphoto2-to-control-the-focus-of-a-canon-t3i-eos-600d/
-    config = camera.get_config()
-    focus = config.get_child_by_name('autofocusdrive')
-    focus.set_value(1)
-    camera.set_config(config)
+    set_camera_config('autofocusdrive', 1)
+
+def set_save_to_card():
+    """Set saving of the pictures to the SD card."""
+    set_camera_config('capturetarget', '1')
+
+def take_photo():
+    """Take a photo on the camera, returning its object."""
+    print(f"Camera: \tfocusing...", end="", flush=True)
+    print(f" taking photo...", end="", flush=True)
+    print(f" image taken.", flush=True)
 
 
 connect_to_camera()
+set_save_to_card()
 
-if arguments.mode == "automatic":
+automatic = arguments.mode == "automatic"
+
+if automatic:
     try:
         print("Arduino: \testablishing serial connection...", end="", flush=True)
         ser = serial.Serial(
@@ -100,20 +126,9 @@ if arguments.mode == "automatic":
         # TODO: this is probably not a good way
         if "Errno 13" in str(e):
             print(
-                " failed with exit code 13, make sure the device (likely /dev/ttyACM0) is readable and writable."
+                f" failed with exit code 13, make sure the device ({ARDUINO_PATH}) is readable and writable."
             )
             quit()
-
-
-def take_photo():
-    """Take a photo on the camera, returning its object."""
-    print(f"Camera: \tfocusing...", end="", flush=True)
-    focus()
-    print(f" taking photo...", end="", flush=True)
-    file_path = camera.capture(gp.GP_CAPTURE_IMAGE)
-    print(f" '{file_path.name}' taken.", flush=True)
-
-    return file_path
 
 
 def turn_by(angle: int):
@@ -136,49 +151,73 @@ def turn_by(angle: int):
             quit()
 
 
-# rotate and save the pictures at the same time
-directory = os.path.join(
-    arguments.output, f"{datetime.now().strftime('%s')}-{arguments.count}"
-)
-os.mkdir(directory)
+if automatic:
+    angle = int(360 / arguments.count)
+else:
+    # a bit of a hack to take a lot of pictures manually
+    arguments.count = 999
 
-angle = int(360 / arguments.count)
+# the photos before the start of the shooting
+initial_photos = list(camera.folder_list_files(arguments.image_save_path))
 
 for i in range(arguments.count):
+    print("Camera: \ttaking a photo: focusing... ", end="", flush=True)
     try:
-        photo = take_photo()
+        while True:
+            try:
+                focus()
+                break
+            except gp.GPhoto2Error:
+                print("unable to focus, retrying... ", end="", flush=True)
+    except KeyboardInterrupt:
+        print("\nCamera: \tInterrupted by the user, taking no more pictures.", flush=True)
+        break
 
-        target = os.path.join(directory, photo.name)
+    try:
+        print("capturing... ", end="", flush=True)
+        camera.trigger_capture()
+        print("done.", flush=True)
 
-        camera_file = camera.file_get(photo.folder, photo.name, gp.GP_FILE_TYPE_NORMAL)
-        camera_file.save(target)
-
-        if i != arguments.count - 1 and arguments.mode == "automatic":
-            turn_by(angle)
-    except gp.GPhoto2Error:
-        print(f" failed! Retry? (y/n): ", flush=True, end="")
+        # don't move on the very last photo (or if we're not in automatic)
+        if automatic:
+            if i != arguments.count - 1:
+                turn_by(angle)
+        else:
+            print("Camera: \tPress enter when the hold has been turned.", end="")
+            input()
+    except gp.GPhoto2Error as e:
+        print(f" camera error! Attempt to reconnect? (y/n): ", flush=True, end="")
 
         answer = input().strip().lower()
 
         if answer == "y":
             connect_to_camera()
         else:
-            quit()
+            break
     except KeyboardInterrupt:
-        print("interrupted by the user, quitting.", flush=True)
-        quit()
-
-
-# for file in glob(os.path.join(directory, "*")):
-#    print(
-#        f"Darktable: \tconverting photo {os.path.basename(file)}...", end="", flush=True
-#    )
-#    Popen(
-#        ["darktable-cli", file, os.path.join(os.path.dirname(file), ".")],
-#        stdin=DEVNULL,
-#        stdout=DEVNULL,
-#        stderr=DEVNULL,
-#    ).communicate()
-#    print(f" done.", flush=True)
+        print("\nCamera: \tInterrupted by the user, taking no more pictures.", flush=True)
+        break
 
 camera.exit()
+
+sleep(2)
+
+# the photos after the shooting
+current_photos = list(camera.folder_list_files(arguments.image_save_path))
+
+count = len(current_photos) - len(initial_photos)
+
+# don't create any folders or files if no photos were taken
+if count == 0:
+    quit()
+
+directory = os.path.join(arguments.output, f"{datetime.now().strftime('%Y-%m-%d_%H-%M-%S')} - {count}")
+os.mkdir(directory)
+
+# save the names of the shot photos to download them later
+with open(os.path.join(directory, "images.txt"), "w") as file:
+    for f in current_photos:
+        if f not in initial_photos:
+            name, _ = f
+
+            file.write(f"{name}\n")
