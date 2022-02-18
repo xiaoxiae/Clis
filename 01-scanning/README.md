@@ -1,20 +1,18 @@
 # Scanning
 
-## Scripts for scanning
+## Script workflow
+The following describes the order in which the scripts should be called and what they do.
 
-### `config.py`
-A configuration file for the scanning scripts.
-
-### (1) `scan.py`
+### `01-scan.py`
 Scans the hold either automatically using the turntable (in which case it expects to be connected to it), or manually. It should also be connected to a camera that is supported by [gphoto2](http://gphoto.org/) (see [supported cameras](http://gphoto.org/proj/libgphoto2/support.php)).
 
-### (2) `copy.py`
+### `02-copy.py`
 Copies over the images from the SD card of the camera. Expects the SD card from the camera to be connected to `/dev/sdX` (see `config.py` for the appropriate `X`).
 
-### (3) `convert.py`
+### `03-convert.py`
 Recursively converts the RAW hold photos to JPEGs. Uses [Darktable](https://www.darktable.org/) to do so.
 
-## Turntable build
+## Turntable
 
 ### `turntable/`
 A folder containing the source code/documentation for the custom turntable used for turning the holds.

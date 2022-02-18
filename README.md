@@ -6,15 +6,11 @@
 The <strong>cli</strong>mber's <strong>s</strong>canner – efficient 3D scanning of climbing holds and climbing gym interiors.
 </p>
 
-
-## `data/`
-Contains the hold data format specification.
-
-## `processing/`
-Contains tools for processing the images into 3D models of holds.
-
-## `scanning/`
+## `01-scanning/`
 Contains tools for scanning the holds.
 
-## `wall/`
-Contains tools and documentation for creating model of the wall itself.
+## `02-processing/`
+Contains tools for processing the hold images into 3D models.
+
+## `03-data/`
+Contains the hold data format specification and the scans of the holds and the wall themselves.

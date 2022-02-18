@@ -12,7 +12,7 @@ A dictionary containing data of all holds.
   Labels: [<a list of custom labels>]
 ```
 
-## `holds/`
+## `models/`
 A folder containing the models of the holds in the `obj` format. Each should be:
 
 - properly sized to correspond to the real world
