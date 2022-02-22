@@ -28,6 +28,7 @@ arguments = parser.parse_args()
 camera = gp.Camera()
 
 if arguments.mode == "camera":
+
     def connect_to_camera():
         """Connect to the camera."""
         print("Copy: \tConnecting to the camera...", end="", flush=True)
@@ -90,7 +91,9 @@ else:
                 with open(file) as f:
                     photos = f.read().splitlines()
                     for photo in photos:
-                        photo_src = os.path.join(mount_folder.name, IMAGE_SAVE_PATH.lstrip("/"), photo)
+                        photo_src = os.path.join(
+                            mount_folder.name, IMAGE_SAVE_PATH.lstrip("/"), photo
+                        )
                         photo_dest = os.path.join(dest_folder, photo)
 
                         print(f"Copy: \tcopying '{photo}':", flush=True, end="")

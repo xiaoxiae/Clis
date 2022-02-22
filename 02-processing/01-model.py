@@ -22,7 +22,9 @@ for image_folder in glob(os.path.join(SCAN_PATH, "*")):
 
     photos = glob(os.path.join(image_folder, "*"))
 
-    tmp_file_name = os.path.join(tempfile._get_default_tempdir(), next(tempfile._get_candidate_names()))
+    tmp_file_name = os.path.join(
+        tempfile._get_default_tempdir(), next(tempfile._get_candidate_names())
+    )
 
     doc = Metashape.Document()
     doc.save(tmp_file_name)
@@ -34,7 +36,12 @@ for image_folder in glob(os.path.join(SCAN_PATH, "*")):
     print(f"Model: \t{str(len(chunk.cameras))} images loaded.", flush=True)
 
     print(f"Model: \tmatching photos...", flush=True, end="")
-    chunk.matchPhotos(keypoint_limit = 40000, tiepoint_limit = 10000, generic_preselection = True, reference_preselection = True)
+    chunk.matchPhotos(
+        keypoint_limit=40000,
+        tiepoint_limit=10000,
+        generic_preselection=True,
+        reference_preselection=True,
+    )
     doc.save()
     print(f" done.", flush=True)
 
@@ -44,17 +51,19 @@ for image_folder in glob(os.path.join(SCAN_PATH, "*")):
     print(f" done.", flush=True)
 
     print(f"Model: \tbuilding depth maps...", flush=True, end="")
-    chunk.buildDepthMaps(downscale = 2, filter_mode = Metashape.MildFiltering)
+    chunk.buildDepthMaps(downscale=2, filter_mode=Metashape.MildFiltering)
     doc.save()
     print(f" done.", flush=True)
 
     print(f"Model: \tbuilding model...", flush=True, end="")
-    chunk.buildModel(source_data = Metashape.DepthMapsData)
+    chunk.buildModel(source_data=Metashape.DepthMapsData)
     doc.save()
     print(f" done.", flush=True)
 
+    # TODO: masking by color (remove black background)
+
     print(f"Model: \texporting...", flush=True, end="")
-    chunk.exportReport(output_folder + '/report.pdf')
+    chunk.exportReport(os.path.join(output_folder, "report.pdf"))
     if chunk.model:
-        chunk.exportModel(output_folder + '/model.obj')
+        chunk.exportModel(os.path.join(output_folder, "model.obj"))
     print(f" done.", flush=True)

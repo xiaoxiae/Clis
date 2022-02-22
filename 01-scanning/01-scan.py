@@ -69,20 +69,24 @@ def connect_to_camera():
         break
     print(" connected.", flush=True)
 
+
 def set_camera_config(key, value):
     config = camera.get_config()
     focus = config.get_child_by_name(key)
     focus.set_value(value)
     camera.set_config(config)
 
+
 def focus():
     """Focus the camera."""
     # thanks https://www.cmcguinness.com/2015/11/using-python-and-gphoto2-to-control-the-focus-of-a-canon-t3i-eos-600d/
-    set_camera_config('autofocusdrive', 1)
+    set_camera_config("autofocusdrive", 1)
+
 
 def set_save_to_card():
     """Set saving of the pictures to the SD card."""
-    set_camera_config('capturetarget', '1')
+    set_camera_config("capturetarget", "1")
+
 
 def take_photo():
     """Take a photo on the camera, returning its object."""
@@ -162,7 +166,9 @@ for i in range(arguments.count):
             except gp.GPhoto2Error:
                 print("unable to focus, retrying... ", end="", flush=True)
     except KeyboardInterrupt:
-        print("\nCamera: \tInterrupted by the user, taking no more pictures.", flush=True)
+        print(
+            "\nCamera: \tInterrupted by the user, taking no more pictures.", flush=True
+        )
         break
 
     try:
@@ -187,7 +193,9 @@ for i in range(arguments.count):
         else:
             break
     except KeyboardInterrupt:
-        print("\nCamera: \tInterrupted by the user, taking no more pictures.", flush=True)
+        print(
+            "\nCamera: \tInterrupted by the user, taking no more pictures.", flush=True
+        )
         break
 
 camera.exit()
@@ -203,7 +211,9 @@ count = len(current_photos) - len(initial_photos)
 if count == 0:
     quit()
 
-directory = os.path.join(arguments.output, f"{datetime.now().strftime('%Y-%m-%d_%H-%M-%S')} - {count}")
+directory = os.path.join(
+    arguments.output, f"{datetime.now().strftime('%Y-%m-%d_%H-%M-%S')} - {count}"
+)
 os.mkdir(directory)
 
 # save the names of the shot photos to download them later
