@@ -1,19 +1,12 @@
-d = """A script for recursively converting all photos from RAW to JPGs in a given folder using darktable."""
-
 import argparse
 import os
-
-from subprocess import Popen, DEVNULL
 from glob import glob
+from subprocess import DEVNULL, Popen
 
+sys.path.append("..")
 from config import *
 
 os.chdir(os.path.dirname(os.path.abspath(__file__)))
-
-
-parser = argparse.ArgumentParser(description=d)
-
-arguments = parser.parse_args()
 
 
 for folder in glob(os.path.join(SCAN_PATH, "*")):

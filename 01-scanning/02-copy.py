@@ -1,21 +1,18 @@
-d = """A script for copying over images from the SD card."""
-
 import argparse
 import os
-import tempfile
 import shutil
+import tempfile
+from glob import glob
+from subprocess import PIPE, Popen
+
 import gphoto2 as gp
 
-from subprocess import Popen, PIPE
-from glob import glob
-
+sys.path.append("..")
 from config import *
 
 os.chdir(os.path.dirname(os.path.abspath(__file__)))
 
-parser = argparse.ArgumentParser(description=d)
-
-save_path = os.path.join(CAMERA_SAVE_PATH, IMAGE_SAVE_PATH.lstrip("/"))
+parser = argparse.ArgumentParser()
 
 subparsers = parser.add_subparsers(help="copy mode", dest="mode", required=True)
 
@@ -59,7 +56,9 @@ if arguments.mode == "camera":
                 photos = f.read().splitlines()
                 for photo in photos:
                     print(f"Copy: \tcopying '{photo}':", flush=True, end="")
-                    gp_file = camera.file_get(save_path, photo, gp.GP_FILE_TYPE_NORMAL)
+                    gp_file = camera.file_get(
+                        camera_path, photo, gp.GP_FILE_TYPE_NORMAL
+                    )
                     result_path = os.path.join(dest_folder, photo)
                     gp_file.save(result_path)
                     print(" copied.")

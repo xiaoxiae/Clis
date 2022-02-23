@@ -1,21 +1,19 @@
-d = """A script for creating photos automatically using a camera and optionally a turntable."""
-
+import argparse
+import os
+import sys
 from datetime import datetime
 from time import sleep
-import os
+
 import gphoto2 as gp
-import argparse
 import serial
 
+sys.path.append("..")
 from config import *
-
 
 os.chdir(os.path.dirname(os.path.abspath(__file__)))
 
 
-parser = argparse.ArgumentParser(description=d)
-
-save_path = os.path.join(CAMERA_SAVE_PATH, IMAGE_SAVE_PATH.lstrip("/"))
+parser = argparse.ArgumentParser()
 
 subparsers = parser.add_subparsers(help="scanning mode", dest="mode", required=True)
 
@@ -154,7 +152,7 @@ else:
     arguments.count = 999
 
 # the photos before the start of the shooting
-initial_photos = list(camera.folder_list_files(save_path))
+initial_photos = list(camera.folder_list_files(camera_path))
 
 for i in range(arguments.count):
     print("Camera: \ttaking a photo: focusing... ", end="", flush=True)
@@ -203,7 +201,7 @@ camera.exit()
 sleep(2)
 
 # the photos after the shooting
-current_photos = list(camera.folder_list_files(save_path))
+current_photos = list(camera.folder_list_files(camera_path))
 
 count = len(current_photos) - len(initial_photos)
 
