@@ -14,17 +14,14 @@ Converts the RAW hold photos to JPEGs. Uses [Darktable](https://www.darktable.or
 
 ## Turntable
 
+### `markers/`
+A folder containing
+
 ### `turntable/`
 A folder containing the source code/documentation for the custom turntable used for turning the holds.
 
 ### `background/`
 A folder containing scripts for generating hold backgrounds (the surface the holds are placed on).
-
-To scale the appropriate file for printing, `pdfjam` can be used:
-
-```
-pdfjam --no-tidy --paper a4 -- <file_name>
-```
 
 ## `TUTORIAL.md`
 Contais my notes about the setup that I used for scanning (lighting, background, number of photos, camera, etc.).

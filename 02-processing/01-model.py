@@ -9,6 +9,9 @@ from glob import glob
 
 sys.path.append("..")
 from config import *
+from utilities import *
+
+printer = Printer("model")
 
 os.chdir(METASHAPE_KEY_DIRECTORY_PATH)
 import Metashape
@@ -28,12 +31,11 @@ for image_folder in glob(os.path.join(SCAN_PATH, "*")):
     output_folder = os.path.join(MODEL_PATH, os.path.basename(image_folder))
 
     if os.path.exists(output_folder):
-        print(
-            f"Model: \t{image_folder} not generated, folder already exists.", flush=True
-        )
+
+        printer.full(f"{image_folder} not generated, folder already exists.")
         continue
 
-    print(f"Model: \tgenerating {image_folder}:", flush=True)
+    printer.full(f"generating {image_folder}:")
 
     photos = glob(os.path.join(image_folder, "*"))
 
@@ -48,9 +50,9 @@ for image_folder in glob(os.path.join(SCAN_PATH, "*")):
     chunk.addPhotos(photos)
     doc.save()
 
-    print(f"Model: \t{str(len(chunk.cameras))} images loaded.", flush=True)
+    printer.full(f"{str(len(chunk.cameras))} images loaded.")
 
-    print(f"Model: \tmatching photos...", flush=True, end="")
+    printer.begin("matching photos")
     chunk.matchPhotos(
         keypoint_limit=40000,
         tiepoint_limit=10000,
@@ -58,28 +60,29 @@ for image_folder in glob(os.path.join(SCAN_PATH, "*")):
         reference_preselection=True,
     )
     doc.save()
-    print(f" done.", flush=True)
+    printer.end(f"done.")
 
-    print(f"Model: \taligning cameras...", flush=True, end="")
+    printer.begin("aligning cameras")
     chunk.alignCameras()
     doc.save()
-    print(f" done.", flush=True)
+    printer.end("done.")
 
     # TODO: cry when not enough cameras are aligned
+    # TODO: save the name of this file somewhere
 
-    print(f"Model: \tbuilding depth maps...", flush=True, end="")
+    printer.begin("building depth maps")
     chunk.buildDepthMaps(downscale=2, filter_mode=Metashape.MildFiltering)
     doc.save()
-    print(f" done.", flush=True)
+    printer.end("done.")
 
-    print(f"Model: \tbuilding model...", flush=True, end="")
+    printer.begin("building model and textures")
     chunk.buildModel(source_data=Metashape.DepthMapsData)
     doc.save()
     chunk.buildUV(page_count=2, texture_size=4096)
     doc.save()
     chunk.buildTexture(texture_size=4096, ghosting_filter=True)
     doc.save()
-    print(f" done.", flush=True)
+    printer.end("done.")
 
     # TODO scaling to real size by using markers
     # TODO documentation page 12
@@ -88,11 +91,14 @@ for image_folder in glob(os.path.join(SCAN_PATH, "*")):
     # doc.save()
     # TODO actually use it to resize
 
-    print(f"Model: \texporting...", flush=True, end="")
+    printer.begin("exporting")
     chunk.exportReport(os.path.join(output_folder, "report.pdf"))
 
     if chunk.model:
         chunk.exportModel(os.path.join(output_folder, "model.obj"))
-        print(f" done.", flush=True)
+        printer.end("done.")
     else:
-        print(f" failed!.", flush=True)
+        printer.end("failed!")
+
+        # TODO: cry
+        # TODO: save the name of this file somewhere

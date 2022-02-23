@@ -4,11 +4,13 @@ import sys
 from datetime import datetime
 from time import sleep
 
-import gphoto2 as gp
 import serial
 
 sys.path.append("..")
 from config import *
+from utilities import *
+
+printer = Printer("scan")
 
 os.chdir(os.path.dirname(os.path.abspath(__file__)))
 
@@ -45,28 +47,6 @@ parser.add_argument(
 
 arguments = parser.parse_args()
 
-camera = gp.Camera()
-
-
-def connect_to_camera():
-    """Connect to the camera."""
-    print("Camera: \tconnecting to the camera...", end="", flush=True)
-    while True:
-        try:
-            camera.init()
-        except gp.GPhoto2Error as ex:
-            # this is not too pretty, but works...
-            try:
-                if ex.code == gp.GP_ERROR_MODEL_NOT_FOUND:
-                    sleep(2)
-                    continue
-                raise
-            except KeyboardInterrupt:
-                print(" interrupted by the user, quitting.", flush=True)
-                quit()
-        break
-    print(" connected.", flush=True)
-
 
 def set_camera_config(key, value):
     config = camera.get_config()
@@ -86,21 +66,14 @@ def set_save_to_card():
     set_camera_config("capturetarget", "1")
 
 
-def take_photo():
-    """Take a photo on the camera, returning its object."""
-    print(f"Camera: \tfocusing...", end="", flush=True)
-    print(f" taking photo...", end="", flush=True)
-    print(f" image taken.", flush=True)
-
-
-connect_to_camera()
+camera = initialize_camera()
 set_save_to_card()
 
 automatic = arguments.mode == "automatic"
 
 if automatic:
     try:
-        print("Arduino: \testablishing serial connection...", end="", flush=True)
+        printer.begin("establishing Arduino serial connection")
         ser = serial.Serial(
             arguments.arduino_device,
             baudrate=9600,
@@ -111,23 +84,21 @@ if automatic:
         if not ser.isOpen():
             ser.open()
 
-        # give Arduino some time
+        # give Arduino some time to connect
         # important, *don't change this*
-        sleep(2)
+        sleep(1)
 
-        print(" established.")
+        printer.end("established.")
     except serial.serialutil.SerialException as e:
         # TODO: this is probably not a good way
         if "Errno 13" in str(e):
-            print(
-                f" failed with exit code 13, make sure the device ({ARDUINO_PATH}) is readable and writable."
-            )
+            printer.end(f"failed with exit code 13, make sure the device ({ARDUINO_PATH}) is readable and writable.")
             quit()
 
 
 def turn_by(angle: int):
     """Turn the turntable by an angle."""
-    print(f"Arduino: \tturning...", end="", flush=True)
+    printer.begin("turning")
 
     ser.flushInput()
     ser.flushOutput()
@@ -138,10 +109,10 @@ def turn_by(angle: int):
         data = ser.readline().decode().strip()
 
         if data == str(angle):
-            print(f" turned by {angle} degrees.", flush=True)
+            printer.end(f"turned by {angle} degrees.")
             break
         else:
-            print(f" Arduino returned '{data}', exitting.")
+            printer.end(f"Arduino returned invalid response '{data}', exitting.")
             quit()
 
 
@@ -155,35 +126,32 @@ else:
 initial_photos = list(camera.folder_list_files(camera_path))
 
 for i in range(arguments.count):
-    print("Camera: \ttaking a photo: focusing... ", end="", flush=True)
+    printer.begin("taking a photo: focusing")
     try:
         while True:
             try:
                 focus()
                 break
             except gp.GPhoto2Error:
-                print("unable to focus, retrying... ", end="", flush=True)
+                printer.mid("unable to focus, retrying")
     except KeyboardInterrupt:
-        print(
-            "\nCamera: \tInterrupted by the user, taking no more pictures.", flush=True
-        )
+        printer.full("\nInterrupted by the user, taking no more pictures.")
         break
 
     try:
-        print("capturing... ", end="", flush=True)
+        printer.mid("capturing")
         camera.trigger_capture()
-        print("done.", flush=True)
+        printer.end("done.")
 
         # don't move on the very last photo (or if we're not in automatic)
         if automatic:
             if i != arguments.count - 1:
                 turn_by(angle)
         else:
-            print("Camera: \tPress enter when the hold has been turned.", end="")
+            printer.full("Press enter when the hold has been turned.", end="")
             input()
     except gp.GPhoto2Error as e:
-        print(f" camera error! Attempt to reconnect? (y/n): ", flush=True, end="")
-
+        printer.end("camera error! Attempt to reconnect? (y/n): ", end="")
         answer = input().strip().lower()
 
         if answer == "y":
@@ -191,14 +159,15 @@ for i in range(arguments.count):
         else:
             break
     except KeyboardInterrupt:
-        print(
-            "\nCamera: \tInterrupted by the user, taking no more pictures.", flush=True
-        )
+        printer.full("Interrupted by the user, taking no more pictures.")
         break
 
 camera.exit()
 
-sleep(2)
+# important, *don't change this*, otherwise camera.folder_list_files won't work
+printer.begin("waiting for camera to save changes")
+sleep(1)
+printer.end("done.")
 
 # the photos after the shooting
 current_photos = list(camera.folder_list_files(camera_path))
