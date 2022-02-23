@@ -10,6 +10,7 @@ The <strong>cli</strong>mber's <strong>s</strong>canner – efficient 3D scannin
 1. `python3 -m venv venv` (create a virtual environment)
 2. `. venv/bin/activate` (activate it)
 3. `pip install -r requirements.txt` (install requirements)
+	- if this fails, you might need an older version of Python -- see the Metashape wheel version requirements
 
 ## Usage
 When using the scripts in each of the respective directories, don't forget to activate the virtual environment using `. venv/bin/activate`. Before running each script, it is advisable to check `config.py`, since a lot of the values will likely differ from their default values.
