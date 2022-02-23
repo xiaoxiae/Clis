@@ -1,0 +1,8 @@
+# Scanning
+gphoto2
+pyserial
+
+# Modelling
+https://s3-eu-west-1.amazonaws.com/download.agisoft.com/Metashape-1.8.1-cp35.cp36.cp37.cp38-none-win_amd64.whl; sys_platform == 'windows'
+https://s3-eu-west-1.amazonaws.com/download.agisoft.com/Metashape-1.8.1-cp35.cp36.cp37.cp38-abi3-macosx_10_13_x86_64.whl; sys_platform == 'macos'
+https://s3-eu-west-1.amazonaws.com/download.agisoft.com/Metashape-1.8.1-cp35.cp36.cp37.cp38-abi3-linux_x86_64.whl; sys_platform == 'linux'
