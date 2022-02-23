@@ -13,8 +13,8 @@ The specification of the data format used for the climbing holds and the climbin
 A dictionary containing the data of all of the holds.
 
 ## `models/`
-A folder containing the models of the holds in the `obj` format. Each should be:
-
-- properly sized to correspond to the real world
-- having correct origin (either in the middle or in some screw hole)
-- facing upwards
+Contains folders corresponding to each of the scanned sets. Each contains:
+- a properly sized model in the `obj` format, centered on the screw hole
+- the `mtl` material settings file 
+- the `jpg` texture file
+- (optionally) a `report.pdf` file that describes the model parameters
