@@ -1,5 +1,3 @@
-d = """A script for converting folders with hold images into 3D models."""
-
 import argparse
 import os
 import sys
@@ -22,10 +20,6 @@ os.chdir(os.path.dirname(os.path.abspath(__file__)))
 # TODO masking by color (black background)
 # TODO use some automated photo editing software and then tell metashape that it's masked
 # TODO maybe gimp? (automatic black background removal)
-
-parser = argparse.ArgumentParser(description=d)
-
-arguments = parser.parse_args()
 
 for image_folder in glob(os.path.join(SCAN_PATH, "*")):
     output_folder = os.path.join(MODEL_PATH, os.path.basename(image_folder))
@@ -84,12 +78,19 @@ for image_folder in glob(os.path.join(SCAN_PATH, "*")):
     doc.save()
     printer.end("done.")
 
-    # TODO scaling to real size by using markers
-    # TODO documentation page 12
-    # TODO test for checking markers
-    # chunk.detectMarkers()
-    # doc.save()
-    # TODO actually use it to resize
+    printer.begin("detecting markers")
+    chunk.detectMarkers(target_type=Metashape.CircularTarget12bit, tolerance=50)
+    doc.save()
+
+    printer.mid("adding marker scales")
+    for m1 in MARKERS:
+        for m2 in MARKERS[m1]:
+            p1 = chunk.findMarker(m1)
+            p2 = chunk.findMarker(m2)
+
+            s = addScalebar(p1, p2)
+            s.reference.distance = MARKERS[m1][m2]
+    printer.end("done.")
 
     printer.begin("exporting")
     chunk.exportReport(os.path.join(output_folder, "report.pdf"))

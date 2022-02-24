@@ -24,3 +24,10 @@ MODEL_PATH = "models"
 
 # the path to the Metashape license file
 METASHAPE_KEY_DIRECTORY_PATH = "/home/xiaoxiae/Downloads/metashape-pro"
+
+# a marker:distances_to_other_markers dictionary (in meters)
+MARKERS = {
+    1: {2: 0.123, 3: 0.456},
+    2: {1: 0.789, 3: 0.123},
+    3: {1: 0.345, 2: 0.456},
+}
