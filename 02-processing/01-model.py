@@ -89,6 +89,7 @@ for image_folder in glob(os.path.join(SCAN_PATH, "*")):
 
     printer.begin("removing floor")
     # TODO: use some tool to edit obj
+    # TODO: Popen the Blender script, since it gives exceptions
     printer.mid("importing back")
     # TODO: import back
     printer.end("done.")

@@ -1,18 +1,18 @@
 # Turntable
 A custom turntable powered by Arduino Uno.
 
-Some numbers of the components vary, depending on how powerful you want the turntable to be. The minimum is 1 (obviously), the maximum being 3.
+Some numbers of the components vary (namely the motors), depending on how powerful you want the turntable to be, with the minimum being 1 and maximum being 3.
 
-## Requirements
-- 1x Arduino Uno
+## Components
+- 1x Arduino Uno (or some other Arduino with enough pins)
 - 1x-3x A4988-based motor drivers
 - 1x-3x bipolar stepper motors with a NEMA 17 interface
-	- note: the length of mine is ~64mm (including the shaft), which is likely not standard; if you wish to use a different-sized NEMA 17 motor, either send me an email and I'll add the adjusted body to the `parts/` directory, or do it yourself (the model was created using Fusion 360 and the `parts/` folder contains the source file)
+	- note: the length of mine is ~64mm (including the shaft), which is likely not standard; if you wish to use a different-sized NEMA 17 motor, edit the model accordingly (either the stl directly, or `parts/Turntable.f3d` in Fusion 360)
 - 4x-12x M3 screws (motor mounts to motors), thread length 0.5cm
 - 2x-6x M3 screws (motor mounts to body), thread length 1cm
 - 2x-6x M3 nuts (motor mounts to body)
 - 1x power supply for the motor(s)
-- (1 + 6)x 608 bearings
+- 7x 608 bearings
 
 ## Construction
 1. print parts of the printer (found in the `parts/` folder):
