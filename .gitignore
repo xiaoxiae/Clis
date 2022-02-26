@@ -1,5 +1,7 @@
 __pycache__
+.python-version
+
 **/ignored
 **/scans
 **/models
-venv
+**venv/

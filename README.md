@@ -7,15 +7,31 @@ The <strong>cli</strong>mber's <strong>s</strong>canner – efficient 3D scannin
 </p>
 
 ## Setting up
-1. `python3 -m venv venv` (create a virtual environment)
-2. `. venv/bin/activate` (activate it)
-3. `pip install -r requirements.txt` (install requirements)
-	- if this fails, you might need an older version of Python -- see the Metashape wheel version requirements
+For the setup, you'll need to first install `pyenv`:
+
+```
+curl https://pyenv.run | bash
+```
+
+and then install some version of Python `3.7.x` (due to Metashape and Blender working only with older Python versions):
+
+```
+pyenv install -v 3.7.12
+```
+
+To set up the virtual environment, do
+
+```
+pyenv virtualenv 3.7.12 clis
+pyenv local clis
+pyenv activate clis
+pip install -r requirements.txt
+```
+
+To finish the installation of `bpy`, run `bpy_post_install`.
 
 ## Usage
-When using the scripts in each of the respective directories, don't forget to activate the virtual environment using `. venv/bin/activate`. Before running each script, it is advisable to check `config.py`, since a lot of the values will likely differ from their default values.
-
-Each of the respective folders contain a `README.md` that further explains the usage of each of the scripts.
+To activate the environment, use `pyenv activate clis`. Before running each script, it is advisable to check `config.py`, since a lot of the values will likely differ from their default values. Each of the respective folders contain a `README.md` that further explains the usage of each of the scripts.
 
 ### `01-scanning/`
 Contains tools for scanning the holds.
