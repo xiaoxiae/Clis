@@ -19,16 +19,15 @@ and then install some version of Python `3.7.x` (due to Metashape and Blender wo
 pyenv install -v 3.7.12
 ```
 
-To set up the virtual environment, do
+To set up the virtual environment, do (in this directory)
 
 ```
 pyenv virtualenv 3.7.12 clis
 pyenv local clis
 pyenv activate clis
 pip install -r requirements.txt
+bpy_post_install
 ```
-
-To finish the installation of `bpy`, run `bpy_post_install`.
 
 ## Usage
 To activate the environment, use `pyenv activate clis`. Before running each script, it is advisable to check `config.py`, since a lot of the values will likely differ from their default values. Each of the respective folders contain a `README.md` that further explains the usage of each of the scripts.
