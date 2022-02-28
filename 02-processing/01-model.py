@@ -2,21 +2,22 @@ import argparse
 import os
 import sys
 import tempfile
-import time
 from glob import glob
 
 sys.path.append("..")
 from config import *
 from utilities import *
 
-printer = Printer("model")
+printer = Printer("model", silence_others=True)
+
+cwd = os.path.dirname(os.path.abspath(__file__))
 
 os.chdir(METASHAPE_KEY_DIRECTORY_PATH)
 import Metashape
 
-os.chdir(os.path.dirname(os.path.abspath(__file__)))
+os.chdir(cwd)
 
-
+# TODO: put the entire thing into try-catch and cry if it doesn't work
 for image_folder in glob(os.path.join(SCAN_PATH, "*")):
     output_folder = os.path.join(MODEL_PATH, os.path.basename(image_folder))
 
@@ -28,35 +29,27 @@ for image_folder in glob(os.path.join(SCAN_PATH, "*")):
 
     photos = glob(os.path.join(image_folder, "*"))
 
-    # manually create the tempfile name, since we have to feed it to metashape
-    tmp_file_name = os.path.join(
-        tempfile._get_default_tempdir(),
-        next(tempfile._get_candidate_names())
-    )
-
     doc = Metashape.Document()
-    doc.save(tmp_file_name)
+    doc.open("metashape-template/Template.psx")
 
-    chunk = doc.addChunk()
+    # get the (only) active chunk
+    chunk = doc.chunk
+
     chunk.addPhotos(photos)
-    doc.save()
-
     printer.full(f"{str(len(chunk.cameras))} images loaded.")
 
     printer.begin("matching photos")
     # TODO: what do these parameters do?
     chunk.matchPhotos(
         keypoint_limit=40000,
-        tiepoint_limit=10000,
+        tiepoint_limit=4000,
         generic_preselection=True,
         reference_preselection=True,
     )
-    doc.save()
     printer.end(f"done.")
 
     printer.begin("aligning cameras")
     chunk.alignCameras()
-    doc.save()
     printer.end("done.")
 
     # TODO: warn when not all cameras are aligned
@@ -64,14 +57,23 @@ for image_folder in glob(os.path.join(SCAN_PATH, "*")):
 
     printer.begin("configuring markers: detecting")
     chunk.detectMarkers(target_type=Metashape.CircularTarget12bit, tolerance=50)
-    doc.save()
+
 
     printer.mid("setting positions")
+
+    markers = {marker.label:marker for marker in chunk.markers}
+
     for m in MARKERS:
-        try:
-            chunk.findMarker(m).location = Metashape.Vector(MARKERS[m])
-        except:
-            pass # TODO cry when a marker is not found
+        m_str = f"target {m}"
+
+        if m_str not in markers:
+            pass # TODO: cry
+
+        markers[m_str].reference.location = Metashape.Vector(MARKERS[m])
+        del markers[m_str]
+
+    if len(markers) != 0:
+        pass # TODO: cry
 
     chunk.updateTransform()
     printer.end("done.")
@@ -79,12 +81,10 @@ for image_folder in glob(os.path.join(SCAN_PATH, "*")):
     printer.begin("building depth maps")
     # TODO: what do these parameters do?
     chunk.buildDepthMaps(downscale=2, filter_mode=Metashape.MildFiltering)
-    doc.save()
     printer.end("done.")
 
     printer.begin("building model")
     chunk.buildModel(source_data=Metashape.DepthMapsData)
-    doc.save()
     printer.end("done.")
 
     printer.begin("removing floor")
@@ -95,8 +95,8 @@ for image_folder in glob(os.path.join(SCAN_PATH, "*")):
     printer.end("done.")
 
     printer.begin("mapping texture")
+    chunk.buildUV(mapping_mode=Metashape.GenericMapping)
     chunk.buildTexture(texture_size=4096, ghosting_filter=True)
-    doc.save()
     printer.end("done.")
 
     printer.begin("exporting")

@@ -33,9 +33,9 @@ METASHAPE_KEY_DIRECTORY_PATH = "/home/xiaoxiae/Downloads/metashape-pro"
 #                /
 #               x+
 #
-# note that the origin of the hold should be at (0, 0, 0)
+# the origin of the hold should be at (0, 0, 0)
 MARKERS = {
-    1: (-1, 0, 0),
-    2: (1, 0, 0),
-    3: (0, 1, 0),
+    94: (-0.0633, -0.0695, 0),
+    91: (0.1087, -0.0695, 0),
+    92: (0.0217, 0.0869, 0),
 }
