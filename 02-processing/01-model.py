@@ -38,20 +38,6 @@ for image_folder in glob(os.path.join(SCAN_PATH, "*")):
     chunk.addPhotos(photos)
     printer.full(f"{str(len(chunk.cameras))} images loaded.")
 
-    printer.begin("matching photos")
-    # TODO: what do these parameters do?
-    chunk.matchPhotos(
-        keypoint_limit=40000,
-        tiepoint_limit=4000,
-        generic_preselection=True,
-        reference_preselection=True,
-    )
-    printer.end(f"done.")
-
-    printer.begin("aligning cameras")
-    chunk.alignCameras()
-    printer.end("done.")
-
     # TODO: warn when not all cameras are aligned
     # TODO: create a log file to models/ folder
 
@@ -76,6 +62,20 @@ for image_folder in glob(os.path.join(SCAN_PATH, "*")):
         pass # TODO: cry
 
     chunk.updateTransform()
+    printer.end("done.")
+
+    printer.begin("matching photos")
+    # TODO: what do these parameters do?
+    chunk.matchPhotos(
+        keypoint_limit=40000,
+        tiepoint_limit=4000,
+        generic_preselection=True,
+        reference_preselection=True,
+    )
+    printer.end(f"done.")
+
+    printer.begin("aligning cameras")
+    chunk.alignCameras()
     printer.end("done.")
 
     printer.begin("building depth maps")
