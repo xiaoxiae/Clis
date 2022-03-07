@@ -1,6 +1,7 @@
 import os
 import sys
 from glob import glob
+from subprocess import Popen, PIPE, DEVNULL
 
 sys.path.append("..")
 from config import *
@@ -26,7 +27,7 @@ for image_folder in glob(os.path.join(SCAN_PATH, "*")):
         output_folder = os.path.join(MODEL_PATH, os.path.basename(image_folder))
 
         if os.path.exists(output_folder):
-            printer.full(f"{image_folder} not generated, folder already exists.")
+            printer.full(f"{output_folder} not generated, folder already exists.")
             continue
 
         printer.full(f"generating {image_folder}:")
@@ -45,7 +46,6 @@ for image_folder in glob(os.path.join(SCAN_PATH, "*")):
         printer.begin("configuring markers: detecting")
         chunk.detectMarkers(target_type=Metashape.CircularTarget12bit, tolerance=50)
 
-
         printer.mid("setting positions")
 
         markers = {marker.label:marker for marker in chunk.markers}
@@ -54,14 +54,14 @@ for image_folder in glob(os.path.join(SCAN_PATH, "*")):
             m_str = f"target {m}"
 
             if m_str not in markers:
-                with open_log_file() as f:
+                with open_log_file(output_folder) as f:
                     f.write(f"Non-existent marker '{m_str}' found.")
 
             markers[m_str].reference.location = Metashape.Vector(MARKERS[m])
             del markers[m_str]
 
         if len(markers) != 0:
-            with open_log_file() as f:
+            with open_log_file(output_folder) as f:
                 f.write(f"Markers {markers.keys()} not found, terminating.")
             break
 
@@ -93,11 +93,19 @@ for image_folder in glob(os.path.join(SCAN_PATH, "*")):
         chunk.buildModel(source_data=Metashape.DepthMapsData)
         printer.end("done.")
 
-        printer.begin("removing floor")
-        # TODO: use some tool to edit obj
-        # TODO: Popen the Blender script, since it gives exceptions
-        printer.mid("importing back")
-        # TODO: import back
+        model_original_path = os.path.join(output_folder, "model_original.obj")
+        model_modified_path = os.path.join(output_folder, "model.obj")
+
+        printer.begin("exporting original model")
+        chunk.exportModel(model_original_path)
+        printer.end("done.")
+
+        printer.begin("removing floor and simplifying")
+        Popen(["python", "02-remove-ground.py", model_original_path, model_modified_path]).communicate()
+        printer.end("done.")
+
+        printer.begin("importing back")
+        chunk.importModel(model_modified_path)
         printer.end("done.")
 
         printer.begin("mapping texture")
@@ -105,11 +113,10 @@ for image_folder in glob(os.path.join(SCAN_PATH, "*")):
         chunk.buildTexture(texture_size=4096, ghosting_filter=True)
         printer.end("done.")
 
-        printer.begin("exporting")
+        printer.begin("exporting final model and report")
+        chunk.exportModel(model_modified_path)
         chunk.exportReport(os.path.join(output_folder, "report.pdf"))
-
-        chunk.exportModel(os.path.join(output_folder, "model.obj"))
         printer.end("done.")
-    except Exception e:
-        with open_log_file() as f:
+    except Exception as e:
+        with open_log_file(output_folder) as f:
             f.write("An exception occurred while generating the model:\n\n" + str(e))
