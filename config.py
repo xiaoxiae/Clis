@@ -19,8 +19,12 @@ SD_PATH = "/dev/sdc"
 # where the scans of the holds are saved
 SCAN_PATH = "scans"
 
-# where the generated models are stored
+# where the generated models are stored (and what each of their names are)
 MODEL_PATH = "models"
+MODEL_FILE_NAME = "model"
+
+# the name of the file containing all the hold information
+MODEL_YAML_NAME = "holds.yaml"
 
 # the path to the Metashape license file
 METASHAPE_KEY_DIRECTORY_PATH = "/home/xiaoxiae/Downloads/metashape-pro"

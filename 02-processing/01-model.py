@@ -93,8 +93,8 @@ for image_folder in glob(os.path.join(SCAN_PATH, "*")):
         chunk.buildModel(source_data=Metashape.DepthMapsData)
         printer.end("done.")
 
-        model_original_path = os.path.join(output_folder, "model_original.obj")
-        model_modified_path = os.path.join(output_folder, "model.obj")
+        model_original_path = os.path.join(output_folder, f"{MODEL_FILE_NAME}_original.obj")
+        model_modified_path = os.path.join(output_folder, f"{MODEL_FILE_NAME}.obj")
 
         printer.begin("exporting original model")
         chunk.exportModel(model_original_path)
