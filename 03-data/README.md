@@ -2,7 +2,7 @@
 The specification of the data format used for the climbing holds and the climbing wall:
 
 ```yaml
-- Id: <sha256sum of the file contents>
+<sha256sum of the file contents>:
   Color: <blue, yellow,...>
   Type: <crimp, jug, sloper, pinch, pocket, foothold>
   Manufacturer: <the name of the manufacturer>
@@ -18,3 +18,4 @@ Contains folders corresponding to each of the scanned sets. Each contains:
 - the `mtl` material settings file 
 - the `jpg` texture file
 - (optionally) a `report.pdf` file that describes the model parameters
+- (optionally) a `model.log` file that contains errors or warnings that arose during the model generation
