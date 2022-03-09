@@ -21,7 +21,7 @@ def get_file_hashsum(path):
         return hashlib.sha256(f.read().encode('utf-8')).hexdigest()
 
 with open(MODEL_YAML_NAME) as f:
-    data = load(f.read(), Loader=Loader) or []
+    data = load(f.read(), Loader=Loader) or {}
 
 for model_folder in glob(os.path.join(MODEL_PATH, "*")):
     hold_path = os.path.join(model_folder, MODEL_FILE_NAME + ".obj")
