@@ -4,7 +4,7 @@ The specification of the data format used for the climbing holds and the climbin
 ```yaml
 <sha256sum of the file contents>:
   Color: <blue, yellow,...>
-  Type: <crimp, jug, sloper, pinch, pocket, foothold>
+  Type: <crimp, jug, sloper, pinch, pocket, foothold, structure>
   Manufacturer: <the name of the manufacturer>
   Labels: [<list>, <of>, <custom>, <labels>]
 ```
