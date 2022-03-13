@@ -36,9 +36,11 @@ model = bpy.data.objects[-1]
 bm = bmesh.new()
 bm.from_mesh(model.data)
 
+
 def dist(p1, p2):
     """Return the Euclidean distance of two points in R^d space."""
     return math.sqrt(sum([(x1 - x2) ** 2 for x1, x2 in zip(p1, p2)]))
+
 
 coordinate_index = 2
 
@@ -53,10 +55,10 @@ for vertex in list(bm.verts):
 bm.to_mesh(model.data)
 
 # separate by loose parts (there will be some, since markers are likely slightly raised)
-bpy.ops.mesh.separate(type='LOOSE')
+bpy.ops.mesh.separate(type="LOOSE")
 
 obj_closest = None
-obj_closest_distance = float('inf')
+obj_closest_distance = float("inf")
 
 # only preserve the object closest to the origin (only in terms of x and y)
 for obj in bpy.data.objects:
@@ -83,7 +85,7 @@ for obj in bpy.data.objects:
 
 # decimate it
 # this code could probably be more elegant but it sorks
-modifier = model.modifiers.new('DecimateMod', 'DECIMATE')
+modifier = model.modifiers.new("DecimateMod", "DECIMATE")
 modifier.ratio = 0.03
 modifier.use_collapse_triangulate = True
 

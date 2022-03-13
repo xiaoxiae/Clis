@@ -48,7 +48,7 @@ for image_folder in glob(os.path.join(SCAN_PATH, "*")):
 
         printer.mid("setting positions")
 
-        markers = {marker.label:marker for marker in chunk.markers}
+        markers = {marker.label: marker for marker in chunk.markers}
 
         for m in MARKERS:
             m_str = f"target {m}"
