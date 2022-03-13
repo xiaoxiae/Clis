@@ -41,4 +41,4 @@ Contains tools for scanning the holds.
 Contains tools for processing the hold images into 3D models.
 
 ### `03-data/`
-Contains the hold data format specification and the scans of the holds and the wall themselves.
+Contains the hold data format specification and tools for managing the 3D models.
