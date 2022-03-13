@@ -16,10 +16,10 @@ IMAGE_EXTENSION = "nef"
 # the path to the SD card from which to copy photos
 SD_PATH = "/dev/sdc"
 
-# where the scans of the holds are saved
+# folder where the scans of the holds are saved
 SCAN_PATH = "scans"
 
-# where the generated models are stored (and what each of their names are)
+# folders where the generated models are stored (and what each of their names are)
 MODEL_PATH = "models"
 MODEL_FILE_NAME = "model"
 
@@ -33,7 +33,7 @@ METASHAPE_KEY_DIRECTORY_PATH = "/home/xiaoxiae/Downloads/metashape-pro"
 #
 #                 z+
 #                 |
-#                 *-- y+
+#                 o-- y+
 #                /
 #               x+
 #
@@ -43,3 +43,6 @@ MARKERS = {
     91: (0.1087, -0.0695, 0),
     92: (0.0217, 0.0869, 0),
 }
+
+# the resolution of the texture file
+TEXTURE_RESOLUTION = 1024

@@ -69,7 +69,6 @@ for image_folder in glob(os.path.join(SCAN_PATH, "*")):
         printer.end("done.")
 
         printer.begin("matching photos")
-        # TODO: what do these parameters do?
         chunk.matchPhotos(
             keypoint_limit=40000,
             tiepoint_limit=10000,
@@ -82,10 +81,7 @@ for image_folder in glob(os.path.join(SCAN_PATH, "*")):
         chunk.alignCameras()
         printer.end("done.")
 
-        # TODO: warn when not all cameras are aligned
-
         printer.begin("building depth maps")
-        # TODO: what do these parameters do?
         chunk.buildDepthMaps(downscale=2, filter_mode=Metashape.MildFiltering)
         printer.end("done.")
 
@@ -110,7 +106,7 @@ for image_folder in glob(os.path.join(SCAN_PATH, "*")):
 
         printer.begin("mapping texture")
         chunk.buildUV(mapping_mode=Metashape.GenericMapping)
-        chunk.buildTexture(texture_size=4096, ghosting_filter=True)
+        chunk.buildTexture(texture_size=TEXTURE_RESOLUTION, ghosting_filter=True)
         printer.end("done.")
 
         printer.begin("exporting final model and report")
