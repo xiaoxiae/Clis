@@ -106,7 +106,7 @@ for image_folder in glob(os.path.join(SCAN_PATH, "*")):
         printer.end("done.")
 
         printer.begin("removing floor and simplifying")
-        Popen(["python", "02-remove-ground.py", model_original_path, model_modified_path]).communicate()
+        Popen(["python", "02-clean.py", model_original_path, model_modified_path]).communicate()
         printer.end("done.")
 
         printer.begin("importing back")

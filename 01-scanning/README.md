@@ -1,6 +1,6 @@
 # Scanning
 
-## Script workflow
+## Scripts
 The following describes the order in which the scripts should be called and what they do.
 
 ### `01-scan.py`
@@ -20,5 +20,5 @@ A folder containing
 ### `turntable/`
 A folder containing the source code/documentation for the custom turntable used for turning the holds.
 
-## `TUTORIAL.md`
-Contais my notes about the setup that I used for scanning (lighting, background, number of photos, camera, etc.).
+## `tutorials/`
+Contais notes about scanning both the holds and the wall.

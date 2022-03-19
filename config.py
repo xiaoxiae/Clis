@@ -4,7 +4,6 @@
 # see `gphoto2 --list-files` for both
 CAMERA_ROOT_PATH = "/store_00010001"
 CAMERA_IMAGE_PATH = "/DCIM/102NZ_50"
-
 camera_path = CAMERA_ROOT_PATH + CAMERA_IMAGE_PATH
 
 # path to Arduino's serial port

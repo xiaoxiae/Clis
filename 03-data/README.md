@@ -1,4 +1,6 @@
 # Data
+
+## Specification
 The specification of the data format used for the climbing holds and the climbing wall:
 
 ```yaml
@@ -9,13 +11,5 @@ The specification of the data format used for the climbing holds and the climbin
   Labels: [<list>, <of>, <custom>, <labels>]
 ```
 
-## `holds.yaml`
-A dictionary containing the data of all of the holds.
-
-## `models/`
-Contains folders corresponding to each of the scanned sets. Each contains:
-- a properly sized model in the `obj` format, centered on the screw hole
-- the `mtl` material settings file 
-- the `jpg` texture file
-- (optionally) a `report.pdf` file that describes the model parameters
-- (optionally) a `model.log` file that contains errors or warnings that arose during the model generation
+## `01-add_models.py`
+A script for adding the generated holds into the `holds.yaml` dictionary, automatically inferring their color in the process.
