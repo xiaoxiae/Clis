@@ -176,6 +176,7 @@ count = len(current_photos) - len(initial_photos)
 
 # don't create any folders or files if no photos were taken
 if count == 0:
+    printer.full("No photos were taken, not saving anything!")
     quit()
 
 directory = os.path.join(
