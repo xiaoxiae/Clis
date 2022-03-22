@@ -52,19 +52,19 @@ Contains the hold data format specification and tools for managing the 3D models
 Run 
 
 ```
-pyenv exec 01-scanning/01-scan.py automatic 15 && pyenv exec 01-scanning/02-copy.py camera && pyenv exec 01-scanning/03-convert.py
+pyenv exec python 01-scanning/01-scan.py automatic 15 && pyenv exec python 01-scanning/02-copy.py camera && pyenv exec python 01-scanning/03-convert.py
 ```
 
 to automatically take 15 pictures of the hold, copy it from the camera and convert it from raw. If you want to take them manually because you don't have the turntable, replace `automatic` with `manual`. Then run
 
 ```
-pyenv exec 02-processing/01-model.py
+pyenv exec python 02-processing/01-model.py
 ```
 
 To generate the model. Finally, run
 
 ```
-pyenv exec 03-data/01-add_models.py
+pyenv exec python 03-data/01-add_models.py
 ```
 
 To add the information about the hold to the `holds.yaml` dictionary.
