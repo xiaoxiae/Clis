@@ -180,7 +180,7 @@ if count == 0:
     quit()
 
 directory = os.path.join(
-    arguments.output, f"{datetime.now().strftime('%Y-%m-%d_%H-%M-%S')} - {count}"
+    arguments.output, f"{datetime.now().strftime('%Y-%m-%d_%H-%M-%S')}"
 )
 os.mkdir(directory)
 
