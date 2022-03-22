@@ -12,9 +12,6 @@ ARDUINO_PATH = "/dev/ttyACM0"
 # the extension of the images
 IMAGE_EXTENSION = "nef"
 
-# the path to the SD card from which to copy photos
-SD_PATH = "/dev/sdc"
-
 # folder where the scans of the holds are saved
 SCAN_PATH = "scans"
 
