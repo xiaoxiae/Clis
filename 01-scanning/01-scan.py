@@ -191,3 +191,5 @@ with open(os.path.join(directory, "images.txt"), "w") as file:
             name, _ = f
 
             file.write(f"{name}\n")
+
+printer.full(f"Saved {count} photos.")
