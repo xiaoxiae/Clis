@@ -58,14 +58,14 @@ for image_folder in glob(os.path.join(SCAN_PATH, "*")):
 
             if m_str not in markers:
                 with append_log_file(output_folder) as f:
-                    f.write(f"Non-existent marker '{m_str}' found.")
-
-            markers[m_str].reference.location = Metashape.Vector(MARKERS[m])
-            del markers[m_str]
+                    f.write(f"Marker '{m_str}' found, skipping.\n")
+            else:
+                markers[m_str].reference.location = Metashape.Vector(MARKERS[m])
+                del markers[m_str]
 
         if len(markers) != 0:
             with append_log_file(output_folder) as f:
-                f.write(f"Markers {markers.keys()} not found, terminating.")
+                f.write(f"Markers {markers.keys()} were not found, not generating model.\n")
             break
 
         chunk.updateTransform()
@@ -86,9 +86,9 @@ for image_folder in glob(os.path.join(SCAN_PATH, "*")):
 
         # check if all cameras are aligned (and possibly warn)
         aligned_cameras = [c for c in chunk.cameras if c.transform]
-        if len(aligned_cameras) != 0:
+        if len(aligned_cameras) - len(photos) != 0:
             with append_log_file(output_folder) as f:
-                f.write(f"Not all cameras aligned ({len(aligned_cameras)}/{len(photos)}): {[c for c in chunk.cameras if not c.transform]}")
+                f.write(f"Not all cameras aligned ({len(aligned_cameras)}/{len(photos)}): {[c for c in chunk.cameras if not c.transform]}\n")
 
         printer.begin("building depth maps")
         chunk.buildDepthMaps(downscale=2, filter_mode=Metashape.MildFiltering)
