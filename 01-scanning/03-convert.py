@@ -13,8 +13,10 @@ os.chdir(os.path.dirname(os.path.abspath(__file__)))
 printer = Printer("convert")
 
 
-for folder in glob(os.path.join(SCAN_PATH, "*")):
-    for file in glob(os.path.join(folder, "*")):
+for folder in sorted(glob(os.path.join(SCAN_PATH, "*"))):
+    printer.full(f"viewing {folder}.")
+
+    for file in sorted(glob(os.path.join(folder, "*"))):
         if not file.lower().endswith(IMAGE_EXTENSION):
             continue
 
