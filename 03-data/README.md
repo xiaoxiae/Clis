@@ -4,11 +4,12 @@
 The specification of the data format used for the climbing holds and the climbing wall:
 
 ```yaml
-<sha256sum of the file contents>:
-  Color: <blue, yellow,... determined by an enum in the config file>
-  Type: <crimp, jug, sloper, pinch, pocket, foothold, structure>
-  Manufacturer: <the name of the manufacturer>
-  Labels: [<list>, <of>, <custom>, <labels>]
+<sha256sum of the file contents (the first 12 characters)>:
+  color: <blue, yellow,... determined by an enum in the config file>
+  type: <crimp, jug, sloper, pinch, pocket, foothold, structure>
+  date: <the date the hold model was created>
+  manufacturer: <the name of the manufacturer>
+  labels: [<list>, <of>, <custom>, <labels>]
 ```
 
 ## `01-add_models.py`
