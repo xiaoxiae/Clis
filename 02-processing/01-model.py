@@ -25,7 +25,7 @@ def append_log_file(output_folder):
     return open(os.path.join(output_folder, "model.log"), "a")
 
 
-for image_folder in glob(os.path.join(SCAN_PATH, "*")):
+for image_folder in sorted(glob(os.path.join(SCAN_PATH, "*"))):
     try:
         output_folder = os.path.join(MODEL_PATH, os.path.basename(image_folder))
 
@@ -52,20 +52,23 @@ for image_folder in glob(os.path.join(SCAN_PATH, "*")):
         printer.mid("setting positions")
 
         markers = {marker.label: marker for marker in chunk.markers}
+        found_markers = 0
 
-        for m in MARKERS:
+        for m in sorted(MARKERS):
             m_str = f"target {m}"
 
             if m_str not in markers:
                 with append_log_file(output_folder) as f:
-                    f.write(f"Marker '{m_str}' found, skipping.\n")
+                    f.write(f"Marker '{m_str}' not found in the images, skipping.\n")
             else:
+                found_markers += 1
                 markers[m_str].reference.location = Metashape.Vector(MARKERS[m])
+
                 del markers[m_str]
 
-        if len(markers) != 0:
+        if found_markers < 3:
             with append_log_file(output_folder) as f:
-                f.write(f"Markers {markers.keys()} were not found, not generating model.\n")
+                f.write(f"Less than 3 markers found, not generating the model.\n")
             break
 
         chunk.updateTransform()
@@ -104,6 +107,8 @@ for image_folder in glob(os.path.join(SCAN_PATH, "*")):
         printer.begin("exporting original model")
         chunk.exportModel(model_original_path)
         printer.end("done.")
+
+        
 
         printer.begin("removing floor and simplifying")
         Popen(["python", "02-clean.py", model_original_path, model_modified_path]).communicate()
