@@ -26,7 +26,13 @@ for folder in sorted(glob(os.path.join(SCAN_PATH, "*"))):
 
         printer.begin(f"converting file {os.path.basename(file)}")
         Popen(
-            ["darktable-cli", file, os.path.join(os.path.dirname(file), ".")],
+            [
+                "darktable-cli",
+                file,
+                os.path.join(os.path.dirname(file), "."),
+                "--out-ext",
+                CONVERTED_IMAGE_EXTENSION,
+            ],
             stdin=DEVNULL,
             stdout=DEVNULL,
             stderr=DEVNULL,

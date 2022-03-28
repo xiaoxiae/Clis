@@ -68,8 +68,11 @@ NAMED_COLORS = {
 
 # -- DO NOT CHANGE ANYTHING BELLOW -- #
 
-# the extension of the images
+# the extension of the images from the camera
 IMAGE_EXTENSION = "nef"
+
+# the extension that the images from the camera get converted to
+CONVERTED_IMAGE_EXTENSION = "tiff"
 
 # folder where the scans of the holds are saved
 SCAN_PATH = "scans"
