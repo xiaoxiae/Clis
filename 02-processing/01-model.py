@@ -68,6 +68,7 @@ for image_folder in sorted(glob(os.path.join(SCAN_PATH, "*"))):
 
         if found_markers < 3:
             with append_log_file(output_folder) as f:
+                printer.end(f"less than 3 markers found, not generating the model.")
                 f.write(f"Less than 3 markers found, not generating the model.\n")
             break
 

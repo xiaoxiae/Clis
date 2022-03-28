@@ -93,7 +93,7 @@ if automatic:
         # TODO: this is probably not a good way
         if "Errno 13" in str(e):
             printer.end(f"failed with exit code 13, make sure the device ({ARDUINO_PATH}) is readable and writable.")
-            quit()
+            sys.exit(1)
 
 
 def turn_by(angle: int):
@@ -113,7 +113,7 @@ def turn_by(angle: int):
             break
         else:
             printer.end(f"Arduino returned invalid response '{data}', exitting.")
-            quit()
+            sys.exit(1)
 
 
 if automatic:
@@ -122,8 +122,13 @@ else:
     # a bit of a hack to take a lot of pictures manually
     arguments.count = 999
 
-# the photos before the start of the shooting
-initial_photos = list(camera.folder_list_files(camera_path))
+try:
+    # the photos before the start of the shooting
+    initial_photos = list(camera.folder_list_files(camera_path))
+except gphoto2.GPhoto2Error:
+    printer.full(f"the path '{camera_path}' not found on the camera, make sure that it is correct and that the camera is turned on.")
+    sys.exit(1)
+
 
 for i in range(arguments.count):
     printer.begin("taking a photo: focusing")
@@ -148,7 +153,7 @@ for i in range(arguments.count):
             if i != arguments.count - 1:
                 turn_by(angle)
         else:
-            printer.full("Press enter when the hold has been turned.", end="")
+            printer.full("press enter when the hold has been turned.", end="")
             input()
     except gp.GPhoto2Error as e:
         printer.end("camera error! Attempt to reconnect? (y/n): ", end="")
@@ -177,7 +182,7 @@ count = len(current_photos) - len(initial_photos)
 # don't create any folders or files if no photos were taken
 if count == 0:
     printer.full("No photos were taken, not saving anything!")
-    quit()
+    sys.exit(1)
 
 directory = os.path.join(
     arguments.output, f"{datetime.now().strftime('%Y-%m-%d_%H-%M-%S')}"
