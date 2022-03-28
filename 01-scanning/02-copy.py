@@ -28,7 +28,7 @@ arguments = parser.parse_args()
 
 # TODO: this code is not too nice
 if arguments.mode == "camera":
-    camera = initialize_camera()
+    camera = initialize_camera(printer=printer)
 
     try:
         for folder in sorted(glob("*")):

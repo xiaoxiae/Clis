@@ -66,7 +66,7 @@ def set_save_to_card():
     set_camera_config("capturetarget", "1")
 
 
-camera = initialize_camera()
+camera = initialize_camera(printer=printer)
 set_save_to_card()
 
 automatic = arguments.mode == "automatic"
