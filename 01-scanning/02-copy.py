@@ -30,8 +30,8 @@ if arguments.mode == "camera":
     camera = initialize_camera()
 
     try:
-        for folder in glob("*"):
-            for file in [f for f in glob(os.path.join(folder, "**", "images.txt"))]:
+        for folder in sorted(glob("*")):
+            for file in sorted([f for f in glob(os.path.join(folder, "**", "images.txt"))]):
                 dest_folder = os.path.dirname(file)
 
                 printer.full(f"copying images from '{file}':")
@@ -51,8 +51,8 @@ if arguments.mode == "camera":
         printer.full(f"A fatal error occurred while copying the files: {e}")
 else:
     try:
-        for folder in glob("*"):
-            for file in [f for f in glob(os.path.join(folder, "**", "images.txt"))]:
+        for folder in sorted(glob("*")):
+            for file in sorted([f for f in glob(os.path.join(folder, "**", "images.txt"))]):
                 dest_folder = os.path.dirname(file)
 
                 printer.full(f"copying images from '{file}':")

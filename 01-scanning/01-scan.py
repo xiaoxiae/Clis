@@ -186,7 +186,7 @@ os.mkdir(directory)
 
 # save the names of the shot photos to download them later
 with open(os.path.join(directory, "images.txt"), "w") as file:
-    for f in current_photos:
+    for f in sorted(current_photos):
         if f not in initial_photos:
             name, _ = f
 
