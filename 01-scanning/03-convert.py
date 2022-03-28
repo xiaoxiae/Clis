@@ -14,11 +14,15 @@ printer = Printer("convert")
 
 
 for folder in sorted(glob(os.path.join(SCAN_PATH, "*"))):
-    printer.full(f"viewing {folder}.")
+    viewing_printed = False
 
     for file in sorted(glob(os.path.join(folder, "*"))):
         if not file.lower().endswith(IMAGE_EXTENSION):
             continue
+
+        if not viewing_printed:
+            viewing_printed = True
+            printer.full(f"viewing {folder}.")
 
         printer.begin(f"converting file {os.path.basename(file)}")
         Popen(
