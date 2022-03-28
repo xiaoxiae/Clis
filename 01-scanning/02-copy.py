@@ -15,6 +15,7 @@ printer = Printer("copy")
 os.chdir(os.path.dirname(os.path.abspath(__file__)))
 
 parser = argparse.ArgumentParser()
+parser.add_argument("-d", "--delete", help="delete the file after copying", action="store_true")
 
 subparsers = parser.add_subparsers(help="copy mode", dest="mode", required=True)
 
@@ -46,7 +47,16 @@ if arguments.mode == "camera":
                         result_path = os.path.join(dest_folder, photo)
                         gp_file.save(result_path)
 
-                        printer.end("copied.")
+                        if not arguments.delete:
+                            printer.end("copied.")
+                        else:
+                            printer.mid("copied")
+
+                            camera.file_delete(camera_path, photo)
+                            printer.end("deleted.")
+
+                os.remove(file)
+
     except Exception as e:
         printer.full(f"A fatal error occurred while copying the files: {e}")
 else:
@@ -66,6 +76,13 @@ else:
 
                         printer.begin(f"copying '{photo}'")
                         shutil.copyfile(photo_src, photo_dest)
-                        printer.end("copied.")
+
+                        if not arguments.delete:
+                            printer.end("copied.")
+                        else:
+                            printer.mid("copied")
+
+                            os.remove(photo_src)
+                            printer.end("deleted.")
     except Exception as e:
         printer.full(f"A fatal error occurred while copying the files: {e}")
