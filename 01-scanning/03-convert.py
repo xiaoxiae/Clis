@@ -12,6 +12,16 @@ os.chdir(os.path.dirname(os.path.abspath(__file__)))
 
 printer = Printer("convert")
 
+parser = argparse.ArgumentParser()
+
+parser.add_argument(
+    "-k",
+    "--keep",
+    help="Keep the originals",
+    action="store_true",
+)
+
+arguments = parser.parse_args()
 
 for folder in sorted(glob(os.path.join(SCAN_PATH, "*"))):
     viewing_printed = False
@@ -37,6 +47,9 @@ for folder in sorted(glob(os.path.join(SCAN_PATH, "*"))):
             stdout=DEVNULL,
             stderr=DEVNULL,
         ).communicate()
-        printer.mid("removing the original")
-        os.remove(file)
+
+        if not arguments.keep:
+            printer.mid("removing the original")
+            os.remove(file)
+
         printer.end("done.")
