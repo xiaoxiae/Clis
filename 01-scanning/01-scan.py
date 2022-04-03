@@ -194,7 +194,7 @@ while True:
 
     # important, *don't change this* (otherwise camera.folder_list_files won't work)
     printer.begin("waiting for camera to save changes")
-    sleep(1)
+    sleep(2)
     printer.end("done.")
 
     # the photos after the shooting
