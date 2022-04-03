@@ -135,7 +135,11 @@ while True:
 
     if n != 0:
         printer.begin("waiting for enter to scan the next hold")
-        input()
+        try:
+            input()
+        except KeyboardInterrupt:
+            printer.end("scanning no more holds.")
+            break
 
     n += 1
 
