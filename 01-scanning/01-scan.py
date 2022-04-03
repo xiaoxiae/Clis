@@ -21,6 +21,7 @@ parser.add_argument(
     "-n",
     "--number",
     help="The number of holds to scan; defaults to 1, -1 means infinite.",
+    metavar="N",
     default=1,
     type=int,
 )
@@ -187,7 +188,7 @@ while True:
 
     camera.exit()
 
-    # important, *don't change this*, otherwise camera.folder_list_files won't work
+    # important, *don't change this* (otherwise camera.folder_list_files won't work)
     printer.begin("waiting for camera to save changes")
     sleep(1)
     printer.end("done.")

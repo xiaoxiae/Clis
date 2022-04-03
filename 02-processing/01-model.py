@@ -109,8 +109,6 @@ for image_folder in sorted(glob(os.path.join(SCAN_PATH, "*"))):
         chunk.exportModel(model_original_path)
         printer.end("done.")
 
-        
-
         printer.begin("removing floor and simplifying")
         Popen(["python", "02-clean.py", model_original_path, model_modified_path]).communicate()
         printer.end("done.")
