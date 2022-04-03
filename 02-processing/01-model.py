@@ -1,5 +1,6 @@
 import os
 import sys
+import argparse
 from glob import glob
 from subprocess import Popen, PIPE, DEVNULL
 
@@ -15,6 +16,17 @@ os.chdir(METASHAPE_KEY_DIRECTORY_PATH)
 import Metashape
 
 os.chdir(cwd)
+
+parser = argparse.ArgumentParser()
+
+parser.add_argument(
+    "-m",
+    "--no-markers",
+    help="Ignore when not enough markers are found (skipping the clean.py script).",
+    action="store_true",
+)
+
+arguments = parser.parse_args()
 
 
 def append_log_file(output_folder):
@@ -68,12 +80,17 @@ for image_folder in sorted(glob(os.path.join(SCAN_PATH, "*"))):
 
         if found_markers < 3:
             with append_log_file(output_folder) as f:
-                printer.end(f"less than 3 markers found, not generating the model.")
-                f.write(f"Less than 3 markers found, not generating the model.\n")
-            continue
-
-        chunk.updateTransform()
-        printer.end("done.")
+                if arguments.no_markers:
+                    printer.end(f"less than 3 markers found, generating regardless.")
+                    f.write(f"Less than 3 markers found, generating regardless.\n")
+                else:
+                    printer.end(f"less than 3 markers found, not generating the model.")
+                    f.write(f"Less than 3 markers found, not generating the model.\n")
+            if not arguments.no_markers:
+                continue
+        else:
+            chunk.updateTransform()
+            printer.end("done.")
 
         printer.begin("matching photos")
         chunk.matchPhotos(
@@ -105,17 +122,19 @@ for image_folder in sorted(glob(os.path.join(SCAN_PATH, "*"))):
         model_original_path = os.path.join(output_folder, f"{MODEL_FILE_NAME}_original.obj")
         model_modified_path = os.path.join(output_folder, f"{MODEL_FILE_NAME}.obj")
 
-        printer.begin("exporting original model")
-        chunk.exportModel(model_original_path)
-        printer.end("done.")
+        # if not enough markers are found but we still want to generate the model, don't do cleanup
+        if found_markers >= 3:
+            printer.begin("exporting original model")
+            chunk.exportModel(model_original_path)
+            printer.end("done.")
 
-        printer.begin("removing floor and simplifying")
-        Popen(["python", "02-clean.py", model_original_path, model_modified_path]).communicate()
-        printer.end("done.")
+            printer.begin("removing floor and simplifying")
+            Popen(["python", "02-clean.py", model_original_path, model_modified_path]).communicate()
+            printer.end("done.")
 
-        printer.begin("importing back")
-        chunk.importModel(model_modified_path)
-        printer.end("done.")
+            printer.begin("importing back")
+            chunk.importModel(model_modified_path)
+            printer.end("done.")
 
         printer.begin("mapping texture")
         chunk.buildUV(mapping_mode=Metashape.GenericMapping)
