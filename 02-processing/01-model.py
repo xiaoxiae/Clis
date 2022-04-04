@@ -47,7 +47,7 @@ for image_folder in sorted(glob(os.path.join(SCAN_PATH, "*"))):
 
         printer.full(f"generating {image_folder}:")
 
-        photos = glob(os.path.join(image_folder, "*"))
+        photos = glob(os.path.join(image_folder, f"*.{CONVERTED_IMAGE_EXTENSION}"))
 
         doc = Metashape.Document()
         doc.open("metashape-template/Template.psx")

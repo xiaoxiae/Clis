@@ -21,7 +21,7 @@ subparsers = parser.add_subparsers(help="copy mode", dest="mode", required=True)
 
 camera_parser = subparsers.add_parser("camera", help="from camera")
 
-sd_parser = subparsers.add_parser("path", help="from path")
+sd_parser = subparsers.add_parser("path", help="from path (to the camera SD card)")
 sd_parser.add_argument("path", help="the path")
 
 arguments = parser.parse_args()
@@ -84,5 +84,8 @@ else:
 
                             os.remove(photo_src)
                             printer.end("deleted.")
+
+                os.remove(file)
+
     except Exception as e:
         printer.full(f"A fatal error occurred while copying the files: {e}")
