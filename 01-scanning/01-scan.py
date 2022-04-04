@@ -154,7 +154,11 @@ while True:
 
 
     for i in range(arguments.count):
-        printer.begin("taking a photo: focusing")
+        if automatic:
+            printer.begin(f"taking a photo ({i + 1}/{arguments.count}): focusing")
+        else:
+            printer.begin("taking a photo: focusing")
+
         try:
             while True:
                 try:
