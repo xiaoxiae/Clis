@@ -41,51 +41,47 @@ def dist(p1, p2):
     """Return the Euclidean distance of two points in R^d space."""
     return math.sqrt(sum([(x1 - x2) ** 2 for x1, x2 in zip(p1, p2)]))
 
+bpy.ops.mesh.primitive_plane_add()
+plane_obj = None
+for obj in bpy.data.objects:
+    if obj.name.lower() == "plane":
+        plane_obj = obj
 
-coordinate_index = 2
+model.location = (0, CUTOFF_OFFSET / 1000, 0)
+plane_obj.rotation_euler[0] = math.pi / 2
 
-cutoff = sum([MARKERS[m][coordinate_index] for m in MARKERS]) / len(MARKERS)
+operation = model.modifiers.new(type="BOOLEAN", name="bool 1")
+operation.object = plane_obj
+operation.operation = "DIFFERENCE"
 
-for vertex in list(bm.verts):
-    # remove by the average of the marker coordinates
-    if vertex.co[coordinate_index] < cutoff:
-        bm.verts.remove(vertex)
+# apply the modifier and remove the plane
+bpy.context.view_layer.objects.active = model
+bpy.ops.object.modifier_apply(modifier="bool 1")
 
-# convert it back from bmesh
-bm.to_mesh(model.data)
+bpy.data.objects.remove(plane_obj, do_unlink=True)
 
-# separate by loose parts (there will be some, since markers are likely slightly raised)
+# preserve the object with the most polygons
+model.select_set(True)
 bpy.ops.mesh.separate(type="LOOSE")
 
-obj_closest = None
-obj_closest_distance = float("inf")
+obj_most_vertices = None
+obj_most_vertices_count = 0
 
-# only preserve the object closest to the origin (only in terms of x and y)
 for obj in bpy.data.objects:
     bm = bmesh.new()
     bm.from_mesh(obj.data)
 
-    average_position = [0, 0]
-    for vertex in list(bm.verts):
-        for i in range(2):
-            average_position[i] += vertex.co[i]
-
-    for i in range(2):
-        average_position[i] /= len(bm.verts)
-
-    dist_to_origin = dist(average_position, [0, 0])
-
-    if dist_to_origin < obj_closest_distance:
-        obj_closest_distance = dist_to_origin
-        obj_closest = obj
+    if obj_most_vertices_count < len(bm.verts):
+        obj_most_vertices_count = len(bm.verts)
+        obj_most_vertices = obj
 
 for obj in bpy.data.objects:
-    if obj is not obj_closest:
+    if obj is not obj_most_vertices:
         bpy.data.objects.remove(obj, do_unlink=True)
 
 # decimate it
 # this code could probably be more elegant but it sorks
-modifier = model.modifiers.new("DecimateMod", "DECIMATE")
+modifier = obj_most_vertices.modifiers.new("DecimateMod", "DECIMATE")
 modifier.ratio = 0.03
 modifier.use_collapse_triangulate = True
 

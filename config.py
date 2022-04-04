@@ -71,6 +71,9 @@ NAMED_COLORS = {
 # good choices are "tiff" (higher quality) and "jpg" (less data)
 CONVERTED_IMAGE_EXTENSION = "jpg"
 
+# the offset above the average of the markers to cut the floor from the hold (in mm)
+CUTOFF_OFFSET = 1.5
+
 
 # -- DO NOT CHANGE ANYTHING BELLOW -- #
 
