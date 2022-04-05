@@ -13,4 +13,4 @@ The specification of the data format used for the climbing holds and the climbin
 ```
 
 ## `01-add_models.py`
-A script for adding the generated holds into the `holds.yaml` dictionary, automatically inferring their color in the process.
+A script for adding the generated holds into the `holds.yaml` dictionary, automatically inferring their color from the texture in the process.

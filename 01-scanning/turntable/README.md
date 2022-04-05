@@ -12,6 +12,7 @@ Some numbers of the components vary (namely the motors), depending on how powerf
 - 2x-6x M3 screws (motor mounts to body), thread length 1cm
 - 2x-6x M3 nuts (motor mounts to body)
 - 1x power supply for the motor(s)
+- 1x superglue (if things don't fit properly)
 - 7x 608 bearings
 
 ## Construction
@@ -19,14 +20,16 @@ Some numbers of the components vary (namely the motors), depending on how powerf
 	- 1x body
 	- 1x top
 	- 1x-3x motor mount
+	- 1x-3x motor gear
 2. add the bearings
-3. wire and power everything properly
+3. put the mounts and gears on the motors (possibly using superglue)
+4. wire and power everything (TODO: diagram from the thesis)
 	- I used a small breadboard to make this step as easy as possible
 	- Arduino expects the following mapping of pins to the A4988 sensor(s):
 		- `2` -> `DIR`
 		- `3` -> `STEP`
 		- `4` -> `ENABLE`
-	- don't forget to **tune the controllers:** https://ardufocus.com/howto/a4988-motor-current-tuning/
-4. load the code to the Arduino (found in the `code/` folder)
+5. **tune the controllers:** https://ardufocus.com/howto/a4988-motor-current-tuning/
+6. load the code to the Arduino (found in the `code/` folder)
 
 After this, the Arduino can be controlled as seen in the `code/code.ino` script: it listens on the serial channel for the next string that it then converts to an integer and uses it as the turning angle. After the turning is done, it responds back with the same number it received (again as a string) and again starts to listen.
