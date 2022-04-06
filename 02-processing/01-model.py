@@ -96,8 +96,6 @@ for image_folder in sorted(glob(os.path.join(SCAN_PATH, "*"))):
         chunk.matchPhotos(
             keypoint_limit=40000,
             tiepoint_limit=10000,
-            generic_preselection=True,
-            reference_preselection=True,
         )
         printer.end(f"done.")
 
