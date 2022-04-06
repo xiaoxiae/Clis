@@ -90,7 +90,7 @@ else:
         # if the file is empty, None is read; we want an empty dict instead
         data = load(f.read(), Loader=Loader) or {}
 
-for model_folder in glob(os.path.join(MODEL_PATH, "*")):
+for model_folder in sorted(glob(os.path.join(MODEL_PATH, "*"))):
     if not os.path.isdir(model_folder):
         continue
 
