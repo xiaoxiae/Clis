@@ -143,6 +143,10 @@ for image_folder in sorted(glob(os.path.join(SCAN_PATH, "*"))):
         chunk.exportModel(model_modified_path)
         chunk.exportReport(os.path.join(output_folder, "report.pdf"))
         printer.end("done.")
+
+        printer.begin("saving")
+        doc.save(path=os.path.join(output_folder, "model.psx"))
+        printer.end("done.")
     except Exception as e:
         printer.full("an exception occurred while generating the model, writing to log.")
         with append_log_file(output_folder) as f:
