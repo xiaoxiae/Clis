@@ -50,13 +50,13 @@ for obj in bpy.data.objects:
 model.location = (0, CUTOFF_OFFSET / 1000, 0)
 plane_obj.rotation_euler[0] = math.pi / 2
 
-operation = model.modifiers.new(type="BOOLEAN", name="bool 1")
+operation = model.modifiers.new(type="BOOLEAN", name="DiffMod")
 operation.object = plane_obj
 operation.operation = "DIFFERENCE"
 
 # apply the modifier and remove the plane
 bpy.context.view_layer.objects.active = model
-bpy.ops.object.modifier_apply(modifier="bool 1")
+bpy.ops.object.modifier_apply(modifier="DiffMod")
 
 bpy.data.objects.remove(plane_obj, do_unlink=True)
 
@@ -79,10 +79,15 @@ for obj in bpy.data.objects:
     if obj is not obj_most_vertices:
         bpy.data.objects.remove(obj, do_unlink=True)
 
+# remesh it (for watertightness)
+modifier = obj_most_vertices.modifiers.new("RemeshMod", "REMESH")
+modifier.mode = "SMOOTH"
+modifier.octree_depth = 8
+modifier.use_smooth_shade = True
+
 # decimate it
-# this code could probably be more elegant but it sorks
 modifier = obj_most_vertices.modifiers.new("DecimateMod", "DECIMATE")
-modifier.ratio = 0.03
+modifier.ratio = 0.05
 modifier.use_collapse_triangulate = True
 
 bpy.ops.export_scene.obj(filepath=arguments.output)
