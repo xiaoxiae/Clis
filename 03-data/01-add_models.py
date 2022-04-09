@@ -113,7 +113,7 @@ for model_folder in sorted(glob(os.path.join(MODEL_PATH, "*"))):
         if color is None:
             printer.mid("no color information")
         else:
-            data[id]["color"] = color
+            data[id]["color"] = [color, NAMED_COLORS[color]]
             printer.mid(f"color {color} inferred")
 
         data[id]["date"] = file_modification_date(hold_path)
