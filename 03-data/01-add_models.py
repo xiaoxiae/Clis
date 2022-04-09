@@ -7,18 +7,31 @@ import datetime
 from PIL import Image, ImageEnhance
 from glob import glob
 
+import matplotlib.pyplot as plt
+import numpy as np
+
 sys.path.append("..")
 from config import *
 from utilities import *
 
 os.chdir(os.path.dirname(os.path.abspath(__file__)))
 
-
 from yaml import load, dump
 from yaml import CLoader as Loader, CDumper as Dumper
 
 printer = Printer("model")
 
+import argparse
+
+parser = argparse.ArgumentParser()
+
+parser.add_argument("-m", "--mode",
+    help="The mode of the color inference ('manual' or 'automatic'). Defaults to 'manual', since automatic is quite unreliable.",
+    choices=["manual", "automatic"],
+    default="manual"
+)
+
+arguments = parser.parse_args()
 
 def get_file_hashsum(path, characters=12):
     """Return the hashsum of the file contents."""
@@ -26,8 +39,34 @@ def get_file_hashsum(path, characters=12):
         return hashlib.sha256(f.read().encode("utf-8")).hexdigest()[:12]
 
 
-def infer_texture_color(path):
-    """Infer a color from an jpg texture of the file."""
+def manual_infer_texture_color(path):
+    """Infer a color from a jpg texture of the file manually (asking the user)."""
+    img = Image.open(path)
+
+    # https://newbedev.com/plotting-in-a-non-blocking-way-with-matplotlib
+    plt.imshow(np.asarray(img))
+    plt.ion()
+    plt.show()
+    plt.draw()
+    plt.pause(0.001)
+
+    printer.begin("input image color: ", dots=False)
+    color = input().strip().lower()
+
+    while True:
+        if color in [c for c in NAMED_COLORS]:
+            break
+
+        printer.begin(f"color '{color}' not recognized, try again: ", dots=False)
+        color = input().strip().lower()
+
+    plt.close()
+
+    return color
+
+
+def automatic_infer_texture_color(path):
+    """Infer a color from a jpg texture of the file automatically."""
 
     def hex_to_tuple(color):
         """Return an (r, g, b) tuple from a hex string."""
@@ -104,11 +143,13 @@ for model_folder in sorted(glob(os.path.join(MODEL_PATH, "*"))):
         printer.end(f"doesn't contain {MODEL_FILE_NAME + '.obj'}, skipping.")
         continue
 
+    inference_function = automatic_infer_texture_color if arguments.mode == "automatic" else manual_infer_texture_color
+
     if id not in data:
         data[id] = {}
 
         # infer color by parsing the texture file
-        color = infer_texture_color(texture_path)
+        color = inference_function(texture_path)
 
         if color is None:
             printer.mid("no color information")
