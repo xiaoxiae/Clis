@@ -44,18 +44,22 @@ class Printer:
             self.save = os.dup(1), os.dup(2)
 
     @silence_others_wrapper
-    def begin(self, *args):
-        self.print_function(f"{self.name}:", *args, end="", flush=True)
-        self.print_function("...", end="", flush=True)
+    def begin(self, *args, dots=True):
+        self.print_function(f"{self.name} |", *args, end="", flush=True)
+
+        if dots:
+            self.print_function("...", end="", flush=True)
 
     @silence_others_wrapper
     def end(self, *args, **kwargs):
         self.print_function("", *args, **kwargs, flush=True)
 
     @silence_others_wrapper
-    def mid(self, *args):
+    def mid(self, *args, dots=True):
         self.print_function("", *args, end="", flush=True)
-        self.print_function("...", end="", flush=True)
+
+        if dots:
+            self.print_function("...", end="", flush=True)
 
     @silence_others_wrapper
     def full(self, *args, **kwargs):
