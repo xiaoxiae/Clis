@@ -1,6 +1,7 @@
 import os
 import sys
 import argparse
+import shutil
 from glob import glob
 from subprocess import Popen, PIPE, DEVNULL
 
@@ -26,6 +27,19 @@ parser.add_argument(
     action="store_true",
 )
 
+parser.add_argument(
+    "-c",
+    "--cameras",
+    help="The Metashape camera position file to use.",
+)
+
+parser.add_argument(
+    "-f",
+    "--force",
+    help="Force model generation, even if the folder exists (removing it before).",
+    action="store_true",
+)
+
 arguments = parser.parse_args()
 
 
@@ -37,13 +51,18 @@ def append_log_file(output_folder):
     return open(os.path.join(output_folder, "model.log"), "a")
 
 
-for image_folder in sorted(glob(os.path.join(SCAN_PATH, "*"))):
+for image_folder in ["/aux/Clis/scans/2022-04-04_00-28-23"]:
+#for image_folder in sorted(glob(os.path.join(SCAN_PATH, "*"))):
     try:
         output_folder = os.path.join(MODEL_PATH, os.path.basename(image_folder))
 
         if os.path.exists(output_folder):
-            printer.full(f"{output_folder} not generated, folder already exists.")
-            continue
+            if arguments.force:
+                printer.full(f"{output_folder} exists, forcing removal.")
+                shutil.rmtree(output_folder)
+            else:
+                printer.full(f"{output_folder} not generated, folder already exists.")
+                continue
 
         printer.full(f"generating {image_folder}:")
 
@@ -99,9 +118,19 @@ for image_folder in sorted(glob(os.path.join(SCAN_PATH, "*"))):
         )
         printer.end(f"done.")
 
-        printer.begin("aligning cameras")
-        chunk.alignCameras()
-        printer.end("done.")
+        if arguments.cameras:
+            # TODO: this works really poorly
+            printer.begin("importing cameras")
+            chunk.importCameras(arguments.cameras)
+            printer.end(f"done.")
+
+            printer.begin("triangulating points")
+            chunk.triangulatePoints()
+            printer.end("done.")
+        else:
+            printer.begin("aligning cameras")
+            chunk.alignCameras()
+            printer.end("done.")
 
         # check if all cameras are aligned (and possibly warn)
         aligned_cameras = [c for c in chunk.cameras if c.transform]
