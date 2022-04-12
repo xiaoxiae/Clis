@@ -23,12 +23,17 @@ Some numbers of the components vary (namely the motors), depending on how powerf
 	- 1x-3x motor gear
 2. add the bearings
 3. put the mounts and gears on the motors (possibly using superglue)
-4. wire and power everything (TODO: diagram from the thesis)
+4. wire and power everything
 	- I used a small breadboard to make this step as easy as possible
 	- Arduino expects the following mapping of pins to the A4988 sensor(s):
 		- `2` -> `DIR`
 		- `3` -> `STEP`
 		- `4` -> `ENABLE`
+
+<p align="center">
+  <img width="50%" src="https://github.com/Climber-Tools/Clis/blob/master/01-scanning/turntable/Diagram.svg" alt="Turntable Wiring Diagram"/>
+</p>
+
 5. **tune the controllers:** https://ardufocus.com/howto/a4988-motor-current-tuning/
 6. load the code to the Arduino (found in the `code/` folder)
 
