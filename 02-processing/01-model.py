@@ -51,8 +51,7 @@ def append_log_file(output_folder):
     return open(os.path.join(output_folder, "model.log"), "a")
 
 
-for image_folder in ["/aux/Clis/scans/2022-04-04_00-28-23"]:
-#for image_folder in sorted(glob(os.path.join(SCAN_PATH, "*"))):
+for image_folder in sorted(glob(os.path.join(SCAN_PATH, "*"))):
     try:
         output_folder = os.path.join(MODEL_PATH, os.path.basename(image_folder))
 
