@@ -10,7 +10,12 @@ The specification of the data format used for the climbing holds and the climbin
   date: <the date the hold model was created>
   manufacturer: <the name of the manufacturer>
   labels: [<list>, <of>, <custom>, <labels>]
+  volume: <a float volume of the hold>
 ```
 
 ## `01-add_models.py`
 A script for adding the generated holds into the `holds.yaml` dictionary, automatically inferring their color from the texture in the process.
+
+## `02-get-volume.py`
+Calculate the volume of the given `obj` file, printing it to standard output.
+

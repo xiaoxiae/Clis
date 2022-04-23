@@ -4,6 +4,7 @@ import sys
 import hashlib
 import math
 import datetime
+from subprocess import Popen, PIPE, DEVNULL
 from PIL import Image, ImageEnhance
 from glob import glob
 
@@ -39,7 +40,7 @@ def get_file_hashsum(path, characters=12):
         return hashlib.sha256(f.read().encode("utf-8")).hexdigest()[:12]
 
 
-def manual_infer_texture_color(path):
+def manual_infer_texture_color(path, default_color=None):
     """Infer a color from a jpg texture of the file manually (asking the user)."""
     img = Image.open(path)
 
@@ -50,11 +51,21 @@ def manual_infer_texture_color(path):
     plt.draw()
     plt.pause(0.001)
 
-    printer.begin("input image color: ", dots=False)
+    if default_color is not None:
+        printer.mid(f"input image color (defaults to '{default_color}'): ", dots=False)
+    else:
+        printer.mid("input image color: ", dots=False)
+
     color = input().strip().lower()
+
+    printer.begin("confirmed")
 
     while True:
         if color in [c for c in NAMED_COLORS]:
+            break
+
+        if color == "" and default_color is not None:
+            color = default_color
             break
 
         printer.begin(f"color '{color}' not recognized, try again: ", dots=False)
@@ -129,7 +140,9 @@ else:
         # if the file is empty, None is read; we want an empty dict instead
         data = load(f.read(), Loader=Loader) or {}
 
+previous_color = None
 for model_folder in sorted(glob(os.path.join(MODEL_PATH, "*"))):
+    # skip files
     if not os.path.isdir(model_folder):
         continue
 
@@ -143,13 +156,15 @@ for model_folder in sorted(glob(os.path.join(MODEL_PATH, "*"))):
         printer.end(f"doesn't contain {MODEL_FILE_NAME + '.obj'}, skipping.")
         continue
 
-    inference_function = automatic_infer_texture_color if arguments.mode == "automatic" else manual_infer_texture_color
-
     if id not in data:
         data[id] = {}
 
         # infer color by parsing the texture file
-        color = inference_function(texture_path)
+        if arguments.mode == "automatic":
+            color = automatic_infer_texture_color(texture_path)
+        else:
+            color = manual_infer_texture_color(texture_path, previous_color)
+            previous_color = color
 
         if color is None:
             printer.mid("no color information")
@@ -157,7 +172,14 @@ for model_folder in sorted(glob(os.path.join(MODEL_PATH, "*"))):
             data[id]["color"] = [color, NAMED_COLORS[color]]
             printer.mid(f"color {color} inferred")
 
+        # add modification date
         data[id]["date"] = file_modification_date(hold_path)
+
+        # add volume
+        result = Popen(["python3", "02-get-volume.py", f"{os.path.join(model_folder, MODEL_FILE_NAME)}.obj"],
+                stdout=PIPE, stderr=DEVNULL).communicate()
+
+        data[id]["volume"] = float(result[0].decode())
 
         printer.end(f"added.")
     else:
