@@ -43,28 +43,29 @@ parser.add_argument(
 arguments = parser.parse_args()
 
 
-def append_log_file(output_folder):
+def append_to_log_file(output_folder, string):
     """Open the model's log file in append mode."""
     if not os.path.exists(output_folder):
         os.mkdir(output_folder)
 
-    return open(os.path.join(output_folder, "model.log"), "a")
+    with open(os.path.join(output_folder, "model.log"), "a") as f:
+        f.write(string)
 
 
 for image_folder in sorted(glob(os.path.join(SCAN_PATH, "*"))):
+    output_folder = os.path.join(MODEL_PATH, os.path.basename(image_folder))
+
+    if os.path.exists(output_folder):
+        if arguments.force:
+            printer.full(f"{output_folder} exists, forcing removal.")
+            shutil.rmtree(output_folder)
+        else:
+            printer.full(f"{output_folder} not generated, folder already exists.")
+            continue
+
+    printer.full(f"generating {image_folder}:")
+
     try:
-        output_folder = os.path.join(MODEL_PATH, os.path.basename(image_folder))
-
-        if os.path.exists(output_folder):
-            if arguments.force:
-                printer.full(f"{output_folder} exists, forcing removal.")
-                shutil.rmtree(output_folder)
-            else:
-                printer.full(f"{output_folder} not generated, folder already exists.")
-                continue
-
-        printer.full(f"generating {image_folder}:")
-
         photos = glob(os.path.join(image_folder, f"*.{CONVERTED_IMAGE_EXTENSION}"))
 
         doc = Metashape.Document()
@@ -88,8 +89,7 @@ for image_folder in sorted(glob(os.path.join(SCAN_PATH, "*"))):
             m_str = f"target {m}"
 
             if m_str not in markers:
-                with append_log_file(output_folder) as f:
-                    f.write(f"Marker '{m_str}' not found in the images, skipping.\n")
+                append_to_log_file(f"Marker '{m_str}' not found in the images, skipping.\n")
             else:
                 found_markers += 1
                 markers[m_str].reference.location = Metashape.Vector(MARKERS[m])
@@ -97,13 +97,12 @@ for image_folder in sorted(glob(os.path.join(SCAN_PATH, "*"))):
                 del markers[m_str]
 
         if found_markers < 3:
-            with append_log_file(output_folder) as f:
-                if arguments.no_markers:
-                    printer.end(f"less than 3 markers found, generating regardless.")
-                    f.write(f"Less than 3 markers found, generating regardless.\n")
-                else:
-                    printer.end(f"less than 3 markers found, not generating the model.")
-                    f.write(f"Less than 3 markers found, not generating the model.\n")
+            if arguments.no_markers:
+                append_to_log_file("Less than 3 markers found, generating regardless.\n")
+                printer.end(f"less than 3 markers found, generating regardless.")
+            else:
+                append_to_log_file("Less than 3 markers found, not generating the model.\n")
+                printer.end(f"less than 3 markers found, not generating the model.")
             if not arguments.no_markers:
                 continue
         else:
@@ -134,8 +133,7 @@ for image_folder in sorted(glob(os.path.join(SCAN_PATH, "*"))):
         # check if all cameras are aligned (and possibly warn)
         aligned_cameras = [c for c in chunk.cameras if c.transform]
         if len(aligned_cameras) - len(photos) != 0:
-            with append_log_file(output_folder) as f:
-                f.write(f"Not all cameras aligned ({len(aligned_cameras)}/{len(photos)}): {[c for c in chunk.cameras if not c.transform]}\n")
+            append_to_log_file(f"Not all cameras aligned ({len(aligned_cameras)}/{len(photos)}): {[c for c in chunk.cameras if not c.transform]}\n")
 
         printer.begin("building depth maps")
         chunk.buildDepthMaps(downscale=2, filter_mode=Metashape.MildFiltering)
@@ -177,5 +175,4 @@ for image_folder in sorted(glob(os.path.join(SCAN_PATH, "*"))):
         printer.end("done.")
     except Exception as e:
         printer.full("an exception occurred while generating the model, writing to log.")
-        with append_log_file(output_folder) as f:
-            f.write(str(e))
+        append_to_log_file(output_folder, str(e))
