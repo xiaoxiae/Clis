@@ -63,7 +63,7 @@ class Printer:
 
     @silence_others_wrapper
     def full(self, *args, **kwargs):
-        self.print_function(f"{self.name}:", *args, **kwargs, flush=True)
+        self.print_function(f"{self.name} |", *args, **kwargs, flush=True)
 
 
 def initialize_camera(printer=Printer()):
