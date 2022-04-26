@@ -89,7 +89,7 @@ for image_folder in sorted(glob(os.path.join(SCAN_PATH, "*"))):
             m_str = f"target {m}"
 
             if m_str not in markers:
-                append_to_log_file(f"Marker '{m_str}' not found in the images, skipping.\n")
+                append_to_log_file(output_folder, f"Marker '{m_str}' not found in the images, skipping.\n")
             else:
                 found_markers += 1
                 markers[m_str].reference.location = Metashape.Vector(MARKERS[m])
@@ -98,10 +98,10 @@ for image_folder in sorted(glob(os.path.join(SCAN_PATH, "*"))):
 
         if found_markers < 3:
             if arguments.no_markers:
-                append_to_log_file("Less than 3 markers found, generating regardless.\n")
+                append_to_log_file(output_folder, "Less than 3 markers found, generating regardless.\n")
                 printer.end(f"less than 3 markers found, generating regardless.")
             else:
-                append_to_log_file("Less than 3 markers found, not generating the model.\n")
+                append_to_log_file(output_folder, "Less than 3 markers found, not generating the model.\n")
                 printer.end(f"less than 3 markers found, not generating the model.")
             if not arguments.no_markers:
                 continue
@@ -133,7 +133,7 @@ for image_folder in sorted(glob(os.path.join(SCAN_PATH, "*"))):
         # check if all cameras are aligned (and possibly warn)
         aligned_cameras = [c for c in chunk.cameras if c.transform]
         if len(aligned_cameras) - len(photos) != 0:
-            append_to_log_file(f"Not all cameras aligned ({len(aligned_cameras)}/{len(photos)}): {[c for c in chunk.cameras if not c.transform]}\n")
+            append_to_log_file(output_folder, f"Not all cameras aligned ({len(aligned_cameras)}/{len(photos)}): {[c for c in chunk.cameras if not c.transform]}\n")
 
         printer.begin("building depth maps")
         chunk.buildDepthMaps(downscale=2, filter_mode=Metashape.MildFiltering)
