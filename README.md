@@ -37,7 +37,8 @@ pyenv exec bpy_post_install
 ```
 
 ## Contents
-Before running the scripts (using `pyenv exec`), it is advisable to check `config.py`, since a lot of the values will most likely differ from their default values for your particular setup. Each of the respective folders contain a `README.md` that further explains the usage of each of the scripts.
+Before running the scripts (using `pyenv exec`), it is advisable to check `config.py`, since a lot of the values will most likely differ from their default values for your particular setup.
+Each of the respective folders contain a `README.md` that further explains the usage of each of the scripts.
 
 ### `01-scanning/`
 Contains tools for scanning the holds.
@@ -48,23 +49,44 @@ Contains tools for processing the hold images into 3D models.
 ### `03-data/`
 Contains the hold data format specification and tools for managing the 3D models.
 
-## Sample usage
-Run 
+## Usage
+
+### Using `tasks/`
+To simplify the usage of Clis, various pre-programmed scripts have been added:
+
+- `tasks/add_models.sh` - model the newly added scans.
+- `tasks/generate_models.sh` - add the newly created models to the `holds.yaml` file.
+- `tasks/move_from_camera.sh` - move the scanned sets from the camera
+- `tasks/scan_multiple.sh` - start scanning indefinitely
+- `tasks/convert_from_raw.sh` - convert the raw copied files from RAW
+- `tasks/scan_single.sh` - scan a single time
+
+To create a single model using them, you could do the following:
+- `./scan_single.sh` to scan a single hold,
+- `./move_from_camera.sh` to move the hold photos from the camera,
+- `./convert_from_raw.sh` to convert the photos to a usable format,
+- `./generate_models.sh` to generate the model and finally
+- `./add_models.sh` to add the model to the `holds.yaml` file.
+
+### Using scripts
+Run
 
 ```
 pyenv exec python 01-scanning/01-scan.py automatic 15 && pyenv exec python 01-scanning/02-copy.py camera && pyenv exec python 01-scanning/03-convert.py
 ```
 
-to automatically take 15 pictures of the hold, copy it from the camera and convert it from raw. If you want to take them manually because you don't have the turntable, replace `automatic` with `manual`. Then run
+to automatically take 15 pictures of the hold, copy it from the camera and convert it from raw.
+If you want to take them manually because you don't have the turntable, replace `automatic` with `manual`. Then run
 
 ```
 pyenv exec python 02-processing/01-model.py
 ```
 
-To generate the model. Finally, run
+to generate the model.
+Finally, run
 
 ```
 pyenv exec python 03-data/01-add_models.py
 ```
 
-To add the information about the hold to the `holds.yaml` dictionary.
+to add the information about the hold to the `holds.yaml` dictionary.
