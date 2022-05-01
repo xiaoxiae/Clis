@@ -23,14 +23,10 @@ TEXTURE_RESOLUTION = 1024
 #
 # the origin of the hold should be at (x, y, z) = (0, 0, 0)
 MARKERS = {
-    22: (0.1, 0, 0),
-    37: (0, -0.1, 0),
-    40: (0, 0.1, 0),
-    18: (-0.1, 0, 0),
-    57: (0.2121, 0.2121, 0),
-    55: (0.2121, -0.2121, 0),
-    56: (-0.2121, -0.2121, 0),
-    54: (-0.2121, 0.2121, 0),
+    3: (0.2121, 0.2121, 0),
+    2: (0.2121, -0.2121, 0),
+    1: (-0.2121, -0.2121, 0),
+    4: (-0.2121, 0.2121, 0),
 }
 
 # the possible named colors of the holds that are used when determining their color
