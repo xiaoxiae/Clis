@@ -14,7 +14,12 @@ printer = Printer("model", silence_others=True)
 cwd = os.path.dirname(os.path.abspath(__file__))
 
 os.chdir(METASHAPE_KEY_DIRECTORY_PATH)
+
 import Metashape
+
+if not Metashape.License().valid:
+    printer.full("Metashape license not activated, quitting.")
+    quit()
 
 os.chdir(cwd)
 
