@@ -185,8 +185,15 @@ for image_folder in sorted(glob(os.path.join(SCAN_PATH, "*"))):
         chunk.exportReport(os.path.join(output_folder, "report.pdf"))
         printer.end("done.")
 
-        printer.begin("saving")
+        printer.begin("saving Metashape project file")
         doc.save(path=os.path.join(output_folder, "model.psx"))
+        printer.end("done.")
+
+        printer.begin("saving configuration")
+        shutil.copy(
+            os.path.join("..", "config.py"),
+            os.path.join(output_folder, "model_config.py"),
+        )
         printer.end("done.")
     except Exception as e:
         printer.full(f"an exception occurred while generating the model, writing to log: {e}")
