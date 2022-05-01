@@ -68,6 +68,10 @@ for image_folder in sorted(glob(os.path.join(SCAN_PATH, "*"))):
     try:
         photos = glob(os.path.join(image_folder, f"*.{CONVERTED_IMAGE_EXTENSION}"))
 
+        if len(photos) == 0:
+            printer.full(f"no photos with the {CONVERTED_IMAGE_EXTENSION} extension found, were they converted?")
+            continue
+
         doc = Metashape.Document()
         doc.open("metashape-template/Template.psx")
 
@@ -113,6 +117,8 @@ for image_folder in sorted(glob(os.path.join(SCAN_PATH, "*"))):
         chunk.matchPhotos(
             keypoint_limit=40000,
             tiepoint_limit=10000,
+            generic_preselection=False,
+            reference_preselection=False,
         )
         printer.end(f"done.")
 
@@ -136,7 +142,11 @@ for image_folder in sorted(glob(os.path.join(SCAN_PATH, "*"))):
             append_to_log_file(output_folder, f"Not all cameras aligned ({len(aligned_cameras)}/{len(photos)}): {[c for c in chunk.cameras if not c.transform]}\n")
 
         printer.begin("building depth maps")
-        chunk.buildDepthMaps(downscale=2, filter_mode=Metashape.MildFiltering)
+        chunk.buildDepthMaps()
+        printer.end("done.")
+
+        printer.begin("building dense cloud")
+        chunk.buildDenseCloud()
         printer.end("done.")
 
         printer.begin("building model")
