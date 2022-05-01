@@ -189,5 +189,5 @@ for image_folder in sorted(glob(os.path.join(SCAN_PATH, "*"))):
         doc.save(path=os.path.join(output_folder, "model.psx"))
         printer.end("done.")
     except Exception as e:
-        printer.full("an exception occurred while generating the model, writing to log.")
+        printer.full(f"an exception occurred while generating the model, writing to log: {e}")
         append_to_log_file(output_folder, str(e))
