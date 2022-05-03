@@ -2,6 +2,7 @@
 gphoto2
 pillow
 pyserial
+opencv-python
 
 # Modelling - Metashape
 https://s3-eu-west-1.amazonaws.com/download.agisoft.com/Metashape-1.8.1-cp35.cp36.cp37.cp38-none-win_amd64.whl; sys_platform == 'windows'

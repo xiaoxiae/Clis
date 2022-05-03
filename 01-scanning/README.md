@@ -14,6 +14,11 @@ Copies over the images from a local (user-readable) path, or the camera itself (
 Converts the RAW hold photos to an image format (likely JPG) used for creating the models.
 Uses [Darktable](https://www.darktable.org/)-CLI to do so.
 
+### `04-convert.py`
+Masks the images using the green color of the turntable.
+Expects the list of files to do this to as a parameter.
+Uses [OpenCV](https://pypi.org/project/opencv-python/) and [pyexiv2](https://github.com/LeoHsiao1/pyexiv2) (for metadata perservation).
+
 ## Turntable
 
 ### `markers/`

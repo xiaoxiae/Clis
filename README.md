@@ -55,10 +55,13 @@ Contains the hold data format specification and tools for managing the 3D models
 To simplify the usage of Clis, various pre-programmed scripts have been added:
 
 - `tasks/add_models.sh` - model the newly added scans.
+- `tasks/convert_from_raw.sh` - convert the raw copied files from RAW
+- `tasks/copy_from_camera.sh` - copy the scanned sets from the camera
+- `tasks/copy_from_path.sh <path>` - copy the scanned sets from the given path
+- `tasks/mask_from_file_list.sh <file>` - mask the folders in the lines of the given text file
 - `tasks/generate_models.sh` - add the newly created models to the `holds.yaml` file.
 - `tasks/move_from_camera.sh` - move the scanned sets from the camera
 - `tasks/scan_multiple.sh` - start scanning indefinitely
-- `tasks/convert_from_raw.sh` - convert the raw copied files from RAW
 - `tasks/scan_single.sh` - scan a single time
 
 To create a single model using them, you could do the following:

@@ -2,6 +2,11 @@ import os
 import sys
 import argparse
 import shutil
+
+import logging
+logging.basicConfig()
+logger = logging.getLogger("Model")
+
 from glob import glob
 from subprocess import Popen, PIPE, DEVNULL
 
@@ -10,6 +15,7 @@ from config import *
 from utilities import *
 
 printer = Printer("model", silence_others=True)
+
 
 cwd = os.path.dirname(os.path.abspath(__file__))
 
