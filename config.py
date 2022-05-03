@@ -53,11 +53,14 @@ CONVERTED_IMAGE_EXTENSION = "jpg"
 # the offset above the average of the markers to cut the floor from the hold (in mm)
 CUTOFF_OFFSET = 2
 
-
-# -- DO NOT CHANGE ANYTHING BELLOW -- #
+# the value of the pixels (in grayscale) to be considered to a hold mask
+MASKING_THRESHOLD = 50
 
 # the extension of the images from the camera
 IMAGE_EXTENSION = "nef"
+
+
+# -- DO NOT CHANGE ANYTHING BELLOW -- #
 
 # folder where the scans of the holds are saved
 SCAN_PATH = "scans"

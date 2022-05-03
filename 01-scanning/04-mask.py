@@ -50,11 +50,11 @@ def get_convex_hull_mask(image):
     return drawing
 
 
-def get_contour_mask(image, threshold = 70):
+def get_contour_mask(image):
     """Get the image by using contours from the pixel threshold."""
     gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
 
-    ret, thresh = cv2.threshold(gray, threshold, 255, cv2.THRESH_BINARY)
+    ret, thresh = cv2.threshold(gray, MASKING_THRESHOLD, 255, cv2.THRESH_BINARY)
 
     # detect the contours on the binary image using cv2.CHAIN_APPROX_NONE
     contours, hierarchy = cv2.findContours(image=thresh, mode=cv2.RETR_TREE, method=cv2.CHAIN_APPROX_NONE)
