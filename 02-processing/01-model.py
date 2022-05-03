@@ -197,6 +197,9 @@ for image_folder in sorted(glob(os.path.join(SCAN_PATH, "*"))):
             os.path.join(output_folder, "model_config.py"),
         )
         printer.end("done.")
+    except KeyboardInterrupt:
+        printer.full(f"interrupted by the user, cleaning up.")
+        shutil.rmtree(output_folder)
     except Exception as e:
         printer.full(f"an exception occurred while generating the model, writing to log: {e}")
         append_to_log_file(output_folder, str(e))
