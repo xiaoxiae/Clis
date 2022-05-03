@@ -18,7 +18,6 @@ Uses [Darktable](https://www.darktable.org/)-CLI to do so.
 Masks the images using the green color of the turntable.
 Expects the list of files to do this to as a parameter.
 Uses [OpenCV](https://pypi.org/project/opencv-python/) and [pyexiv2](https://github.com/LeoHsiao1/pyexiv2) (for metadata perservation).
-Note that the hold should be entirely surounded by the green color of the turntable, since it will otherwise be cropped!
 
 ## Turntable
 
