@@ -51,7 +51,7 @@ Contains the hold data format specification and tools for managing the 3D models
 
 ## Usage
 
-### Using `tasks/`
+### Using tasks
 To simplify the usage of Clis, various pre-programmed scripts have been added:
 
 - `tasks/add_models.sh` - model the newly added scans.
