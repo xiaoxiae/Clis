@@ -10,10 +10,11 @@ from subprocess import Popen, PIPE
 from glob import glob
 
 sys.path.append("..")
-from config import *
-from utilities import *
 
 os.chdir(os.path.dirname(os.path.abspath(__file__)))
+
+from config import *
+from utilities import *
 
 printer = Printer("mask")
 
