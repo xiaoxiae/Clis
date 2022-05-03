@@ -3,24 +3,31 @@ import os
 import sys
 from time import sleep
 
+
 def silence_others_wrapper(f):
     def inner(self, *args, **kwargs):
         if self.silence_others:
-            os.dup2(self.save[0], 1)
-            os.dup2(self.save[1], 2)
-            # close the temporary fds
+            os.dup2(self.save_fds[0],1)
+            os.dup2(self.save_fds[1],2)
+
             os.close(self.null_fds[0])
             os.close(self.null_fds[1])
+
+            os.close(self.save_fds[0])
+            os.close(self.save_fds[1])
+
+        # stuff is not silenced here
 
         result = f(self, *args, **kwargs)
 
         if self.silence_others:
-            self.null_fds = [os.open(os.devnull, os.O_RDWR) for x in range(2)]
-            self.save = os.dup(1), os.dup(2)
+            self.null_fds = [os.open(os.devnull,os.O_RDWR) for x in range(2)]
+            self.save_fds = (os.dup(1), os.dup(2))
 
-            # put /dev/null fds on 1 and 2
-            os.dup2(self.null_fds[0], 1)
-            os.dup2(self.null_fds[1], 2)
+            os.dup2(self.null_fds[0],1)
+            os.dup2(self.null_fds[1],2)
+
+        # stuff is silenced here
 
         return result
 
@@ -40,8 +47,8 @@ class Printer:
         self.silence_others = silence_others
 
         if silence_others:
-            self.null_fds = [os.open(os.devnull, os.O_RDWR) for x in range(2)]
-            self.save = os.dup(1), os.dup(2)
+            self.null_fds = [os.open(os.devnull,os.O_RDWR) for x in range(2)]
+            self.save_fds = (os.dup(1), os.dup(2))
 
     @silence_others_wrapper
     def begin(self, *args, dots=True):
