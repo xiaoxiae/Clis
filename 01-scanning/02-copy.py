@@ -21,7 +21,7 @@ subparsers = parser.add_subparsers(help="copy mode", dest="mode", required=True)
 
 camera_parser = subparsers.add_parser("camera", help="from camera")
 
-sd_parser = subparsers.add_parser("path", help="from path (to the camera SD card)")
+sd_parser = subparsers.add_parser("path", help="from path")
 sd_parser.add_argument("path", help="the path")
 
 arguments = parser.parse_args()
@@ -69,9 +69,7 @@ else:
                 with open(file) as f:
                     photos = f.read().splitlines()
                     for photo in photos:
-                        photo_src = os.path.join(
-                            arguments.path, CAMERA_IMAGE_PATH.lstrip("/"), photo
-                        )
+                        photo_src = os.path.join(arguments.path.rstrip("/"), photo)
                         photo_dest = os.path.join(dest_folder, photo)
 
                         printer.begin(f"copying '{photo}'")
