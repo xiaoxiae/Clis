@@ -3,10 +3,6 @@ import sys
 import argparse
 import shutil
 
-import logging
-logging.basicConfig()
-logger = logging.getLogger("Model")
-
 from glob import glob
 from subprocess import Popen, PIPE, DEVNULL
 
