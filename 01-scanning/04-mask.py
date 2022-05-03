@@ -68,7 +68,7 @@ def get_contour_mask(image):
 
     # flood fill from origin on black pixels
     cv2.floodFill(drawing, None,
-            seedPoint=(image.shape[0] // 2, image.shape[1] // 2),
+            seedPoint=(image.shape[1] // 2, image.shape[0] // 2),
             newVal=(255, 255, 255),
             loDiff=(1, 1, 1, 1), upDiff=(1, 1, 1, 1))
 
@@ -87,8 +87,10 @@ parser.add_argument("folders", nargs='+', help="The folders to process the image
 arguments = parser.parse_args()
 
 for folder in arguments.folders:
-    printer.begin(f"masking '{folder}'")
+    printer.full(f"masking images from '{folder}':")
     for name in sorted(glob(os.path.join(folder, "_*.jpg"))):
+        printer.begin(f"masking '{name}'")
+
         image = cv2.imread(name)
 
         mask = get_contour_mask(image)
@@ -108,4 +110,4 @@ for folder in arguments.folders:
         os.remove(name)
         shutil.move(tmpfilename, name)
 
-    printer.end("done.")
+        printer.end("done.")
