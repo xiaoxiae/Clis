@@ -58,18 +58,18 @@ To simplify the usage of Clis, various pre-programmed scripts have been added:
 - `tasks/convert_from_raw.sh` - convert the raw copied files from RAW
 - `tasks/copy_from_camera.sh` - copy the scanned sets from the camera
 - `tasks/copy_from_path.sh <path>` - copy the scanned sets from the given path
-- `tasks/mask_from_file_list.sh <file>` - mask the folders in the lines of the given text file
 - `tasks/generate_models.sh` - add the newly created models to the `holds.yaml` file.
+- `tasks/mask_from_file_list.sh <file>` - mask the folders in the lines of the given text file
 - `tasks/move_from_camera.sh` - move the scanned sets from the camera
 - `tasks/scan_multiple.sh` - start scanning indefinitely
 - `tasks/scan_single.sh` - scan a single time
 
 To create a single model using them, you could do the following:
-- `./scan_single.sh` to scan a single hold,
-- `./move_from_camera.sh` to move the hold photos from the camera,
-- `./convert_from_raw.sh` to convert the photos to a usable format,
-- `./generate_models.sh` to generate the model and finally
-- `./add_models.sh` to add the model to the `holds.yaml` file.
+1. `./scan_single.sh` to scan a single hold,
+2. `./move_from_camera.sh` to move the hold photos from the camera,
+3. `./convert_from_raw.sh` to convert the photos to a usable format,
+4. `./generate_models.sh` to generate the model and finally
+5. `./add_models.sh` to add the model to the `holds.yaml` file.
 
 ### Using scripts
 Run
