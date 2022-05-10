@@ -1,5 +1,8 @@
 __pycache__
 .python-version
 
+01-scanning/scans
+02-processing/models
+
 **/ignored
 **venv/
