@@ -11,10 +11,13 @@ This project contains everything you need to efficiently scan large set of holds
 
 Additionally, it contains a tutorial for scanning climbing gym interiors, both of which can then be used in [Cled – the climber's editor](https://github.com/Climber-Apps/Cled).
 
+For additional information, see the [thesis](https://github.com/Climber-Apps/Thesis).
+
 ## Setting up
 For the setup, you'll need to first install `pyenv`:
 
 ```
+# make sure to read what the script does before running it!
 curl https://pyenv.run | bash
 ```
 
@@ -26,14 +29,14 @@ You'll then need to install Python `3.7.x` (due to Metashape and Blender working
 pyenv install -v 3.7.12
 ```
 
-To set up the virtual environment, do (in this directory)
+To set up the virtual environment, do (in this directory):
 
 ```
 pyenv virtualenv 3.7.12 clis
 pyenv local clis
 pyenv activate clis
 pyenv exec pip install -r requirements.txt
-pyenv exec bpy_post_install
+pyenv exec bpy_post_install # finds Blender and copies over some of its scripts
 ```
 
 ## Contents
@@ -78,7 +81,7 @@ Run
 pyenv exec python 01-scanning/01-scan.py automatic 15 && pyenv exec python 01-scanning/02-copy.py camera && pyenv exec python 01-scanning/03-convert.py
 ```
 
-to automatically take 15 pictures of the hold, copy it from the camera and convert it from raw.
+to automatically take 15 pictures of the hold, copy them from the camera and convert them from raw.
 If you want to take them manually because you don't have the turntable, replace `automatic` with `manual`. Then run
 
 ```

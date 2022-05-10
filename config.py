@@ -41,6 +41,7 @@ NAMED_COLORS = {
     "gray": "#808080",
     "green": "#008000",
     "pink": "#FFC0CB",
+    "purple": "#800080",
     "red": "#FF0000",
     "salmon": "#FA8072",
     "yellow": "#FFFF00",
