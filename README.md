@@ -1,3 +1,7 @@
+_Project is **archived** and being reworked into something better. Soon launching at http://climbuddy.com/!_
+
+---
+
 <p align="center" width="100%">
 <img width="50%" src="https://raw.githubusercontent.com/xiaoxiae/Clis/master/logo.svg">
 </p>
