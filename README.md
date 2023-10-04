@@ -1,5 +1,5 @@
 <p align="center" width="100%">
-<img width="50%" src="https://raw.githubusercontent.com/Climber-Apps/Clis/master/logo.svg">
+<img width="50%" src="https://raw.githubusercontent.com/xiaoxiae/Clis/master/logo.svg">
 </p>
 
 <p align="center" width="100%">
@@ -9,9 +9,9 @@ The <strong>cli</strong>mber's <strong>s</strong>canner – efficient 3D scannin
 ## Introduction
 This project contains everything you need to efficiently scan large set of holds (or other 3D objects, for that matter, if forked and adjusted accordingly) in a small amount of time. It uses an Arduino-powered turntable and camera to automatically take pictures, which it then converts to 3D models using the [Agisoft Metashape](https://www.agisoft.com/) photogrammetry software.
 
-Additionally, it contains a tutorial for scanning climbing gym interiors, both of which can then be used in [Cled – the climber's editor](https://github.com/Climber-Apps/Cled).
+Additionally, it contains a tutorial for scanning climbing gym interiors, both of which can then be used in [Cled – the climber's editor](https://github.com/xiaoxiae/Cled).
 
-For additional information, see the [thesis](https://github.com/Climber-Apps/Thesis).
+For additional information, see the [thesis](https://github.com/xiaoxiae/Thesis).
 
 ## Setting up
 For the setup, you'll need to first install `pyenv`:
